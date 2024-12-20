@@ -1,4 +1,6 @@
 #include "graph.h"
+#include <filesystem>
+using namespace std;
 
 Graph::Graph()
 {
@@ -8,7 +10,10 @@ Graph::Graph()
 
 void Graph::draw()
 {
-    ofstream dotFile("hanoi_map.dot");
+    const string outputDir = "../../results/";
+    filesystem::create_directories(outputDir);
+
+    ofstream dotFile(outputDir + "hanoi_map.dot");
 
     dotFile << "digraph HanoiMap {\n";
     dotFile << "    rankdir=LR;\n";
@@ -17,7 +22,7 @@ void Graph::draw()
     for (const auto &node : nodes)
     {
         dotFile << "    " << node.id << " [label=\"" << node.id << "\\n("
-                << node.x << ", " << node.y << ")\"];\n";
+                << node.x << ", " << node.y << ")\"]\n";
     }
 
     for (const auto &edge : edges)
@@ -37,13 +42,14 @@ void Graph::draw()
             dotFile << ", dir=both, color=blue, fontcolor=blue";
         }
 
-        dotFile << "];\n";
+        dotFile << "]\n";
     }
 
     dotFile << "}\n";
     dotFile.close();
 
-    system("dot -Tpng hanoi_map.dot -o hanoi_map.png");
+    string command = "dot -Tpng " + outputDir + "hanoi_map.dot -o " + outputDir + "hanoi_map.png";
+    system(command.c_str());
 }
 
 void Graph::setupMap()
