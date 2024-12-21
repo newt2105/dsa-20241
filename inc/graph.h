@@ -13,9 +13,8 @@ struct Node {
 struct Edge {
     bool direction; // true = one-way, false = two-way
     double weight;
-    Node from; // Changed from index to Node
-    Node to;   // Changed from index to Node
-
+    Node from; 
+    Node to;   
     Edge(bool direction, double weight, const Node &from, const Node &to)
         : direction(direction), weight(weight), from(from), to(to) {}
 };
