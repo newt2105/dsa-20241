@@ -5,34 +5,39 @@
 #include <vector>
 #include <map>
 
-struct Node {
-    std::string id;
+using namespace std;
+
+struct Node
+{
+    string id;
     double x, y;
 };
 
-struct Edge {
+struct Edge
+{
     bool direction; // true = one-way, false = two-way
     double weight;
-    Node from; 
-    Node to;   
+    Node from;
+    Node to;
     Edge(bool direction, double weight, const Node &from, const Node &to)
         : direction(direction), weight(weight), from(from), to(to) {}
 };
 
-class Graph {
+class Graph
+{
 public:
     Graph();
-    void addNode(const std::string &id, double x, double y);
-    void addEdge(const std::string &fromId, const std::string &toId, bool isOneWay, double weight);
-    std::vector<Node> getNodes() const;
-    std::vector<Edge> getEdges() const;
-    std::map<std::string, std::vector<Edge>> getAdjacencyList() const;
+    void addNode(const string &id, double x, double y);
+    void addEdge(const string &fromId, const string &toId, bool isOneWay, double weight);
+    vector<Node> getNodes() const;
+    vector<Edge> getEdges() const;
+    map<string, vector<Edge>> getAdjacencyList() const;
     void displayGraph();
 
 private:
-    std::vector<Node> nodes;
-    std::vector<Edge> edges;
-    std::map<std::string, std::vector<Edge>> adjacencyList;
+    vector<Node> nodes;
+    vector<Edge> edges;
+    map<string, vector<Edge>> adjacencyList;
 
     void setupMap();
     void draw();

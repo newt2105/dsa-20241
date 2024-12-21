@@ -8,6 +8,8 @@
 #include <iostream>
 #include <iomanip>
 
+using namespace std;
+
 double Algorithms::calculateDistance(const Node &node1, const Node &node2)
 {
     const double R = 6371.0;
@@ -23,21 +25,21 @@ double Algorithms::calculateDistance(const Node &node1, const Node &node2)
     return R * c;
 }
 
-std::vector<std::string> Algorithms::dijkstra(const Graph &graph, const std::string &start, const std::string &end)
+vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, const string &end)
 {
     auto nodes = graph.getNodes();
     auto adjacencyList = graph.getAdjacencyList();
 
-    std::unordered_map<std::string, double> distances;
-    std::unordered_map<std::string, std::string> previous;
-    std::priority_queue<std::pair<double, std::string>,
-                        std::vector<std::pair<double, std::string>>,
-                        std::greater<>>
+    unordered_map<string, double> distances;
+    unordered_map<string, string> previous;
+    priority_queue<pair<double, string>,
+                        vector<pair<double, string>>,
+                        greater<>>
         pq;
 
     for (const auto &node : nodes)
     {
-        distances[node.id] = std::numeric_limits<double>::infinity();
+        distances[node.id] = numeric_limits<double>::infinity();
     }
     distances[start] = 0;
     pq.emplace(0, start);
@@ -54,7 +56,7 @@ std::vector<std::string> Algorithms::dijkstra(const Graph &graph, const std::str
         {
             for (const auto &edge : adjacencyList.at(current))
             {
-                std::string next = edge.to.id;
+                string next = edge.to.id;
                 double newDist = distances[current] + edge.weight;
 
                 if (newDist < distances[next])
@@ -67,8 +69,8 @@ std::vector<std::string> Algorithms::dijkstra(const Graph &graph, const std::str
         }
     }
 
-    std::vector<std::string> path;
-    for (std::string current = end; current != start; current = previous[current])
+    vector<string> path;
+    for (string current = end; current != start; current = previous[current])
     {
         if (previous.find(current) == previous.end())
         {
@@ -77,12 +79,12 @@ std::vector<std::string> Algorithms::dijkstra(const Graph &graph, const std::str
         path.push_back(current);
     }
     path.push_back(start);
-    std::reverse(path.begin(), path.end());
+    reverse(path.begin(), path.end());
 
     return path;
 }
 
-std::vector<std::string> Algorithms::astar(const Graph &graph, const std::string &start, const std::string &end)
+vector<string> Algorithms::astar(const Graph &graph, const string &start, const string &end)
 {
     auto nodes = graph.getNodes();
     auto adjacencyList = graph.getAdjacencyList();
@@ -96,17 +98,17 @@ std::vector<std::string> Algorithms::astar(const Graph &graph, const std::string
             endNode = node;
     }
 
-    std::unordered_map<std::string, double> gScore, fScore;
-    std::unordered_map<std::string, std::string> previous;
-    std::priority_queue<std::pair<double, std::string>,
-                        std::vector<std::pair<double, std::string>>,
-                        std::greater<>>
+    unordered_map<string, double> gScore, fScore;
+    unordered_map<string, string> previous;
+    priority_queue<pair<double, string>,
+                        vector<pair<double, string>>,
+                        greater<>>
         openSet;
 
     for (const auto &node : nodes)
     {
-        gScore[node.id] = std::numeric_limits<double>::infinity();
-        fScore[node.id] = std::numeric_limits<double>::infinity();
+        gScore[node.id] = numeric_limits<double>::infinity();
+        fScore[node.id] = numeric_limits<double>::infinity();
     }
 
     gScore[start] = 0;
@@ -125,7 +127,7 @@ std::vector<std::string> Algorithms::astar(const Graph &graph, const std::string
         {
             for (const auto &edge : adjacencyList.at(current))
             {
-                std::string next = edge.to.id;
+                string next = edge.to.id;
                 double tentativeGScore = gScore[current] + edge.weight;
 
                 if (tentativeGScore < gScore[next])
@@ -139,8 +141,8 @@ std::vector<std::string> Algorithms::astar(const Graph &graph, const std::string
         }
     }
 
-    std::vector<std::string> path;
-    for (std::string current = end; current != start; current = previous[current])
+    vector<string> path;
+    for (string current = end; current != start; current = previous[current])
     {
         if (previous.find(current) == previous.end())
         {
@@ -149,16 +151,16 @@ std::vector<std::string> Algorithms::astar(const Graph &graph, const std::string
         path.push_back(current);
     }
     path.push_back(start);
-    std::reverse(path.begin(), path.end());
+    reverse(path.begin(), path.end());
 
     return path;
 }
 
-void Algorithms::displayPath(const std::vector<std::string> &path, const std::string &algorithm, const Graph &graph)
+void Algorithms::displayPath(const vector<string> &path, const string &algorithm, const Graph &graph)
 {
     if (path.empty())
     {
-        std::cout << algorithm << " found no valid path!" << std::endl;
+        cout << algorithm << " found no valid path!" << endl;
         return;
     }
 
@@ -167,8 +169,8 @@ void Algorithms::displayPath(const std::vector<std::string> &path, const std::st
 
     for (size_t i = 0; i < path.size() - 1; ++i)
     {
-        std::string current = path[i];
-        std::string next = path[i + 1];
+        string current = path[i];
+        string next = path[i + 1];
         bool foundEdge = false;
 
         if (adjacencyList.find(current) != adjacencyList.end())
@@ -186,17 +188,17 @@ void Algorithms::displayPath(const std::vector<std::string> &path, const std::st
 
         if (!foundEdge)
         {
-            std::cout << algorithm << " error: No valid edge between " << current << " and " << next << std::endl;
+            cout << algorithm << " error: No valid edge between " << current << " and " << next << endl;
             return;
         }
     }
 
-    std::cout << algorithm << " path: ";
+    cout << algorithm << " path: ";
     for (size_t i = 0; i < path.size(); ++i)
     {
-        std::cout << path[i];
+        cout << path[i];
         if (i < path.size() - 1)
-            std::cout << " -> ";
+            cout << " -> ";
     }
-    std::cout << "\nTotal distance: " << std::fixed << std::setprecision(1) << totalDistance << " km" << std::endl;
+    cout << "\nTotal distance: " << fixed << setprecision(1) << totalDistance << " km" << endl;
 }

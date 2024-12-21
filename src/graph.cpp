@@ -13,13 +13,13 @@ Graph::Graph()
     draw();
 }
 
-void Graph::addNode(const std::string &id, double x, double y)
+void Graph::addNode(const string &id, double x, double y)
 {
     Node node = {id, x, y};
     nodes.push_back(node);
 }
 
-void Graph::addEdge(const std::string &fromId, const std::string &toId, bool isOneWay, double weight)
+void Graph::addEdge(const string &fromId, const string &toId, bool isOneWay, double weight)
 {
     auto fromNode = find_if(nodes.begin(), nodes.end(),
                             [fromId](const Node &node)
@@ -42,17 +42,17 @@ void Graph::addEdge(const std::string &fromId, const std::string &toId, bool isO
     }
 }
 
-std::vector<Node> Graph::getNodes() const
+vector<Node> Graph::getNodes() const
 {
     return nodes;
 }
 
-std::vector<Edge> Graph::getEdges() const
+vector<Edge> Graph::getEdges() const
 {
     return edges;
 }
 
-std::map<std::string, std::vector<Edge>> Graph::getAdjacencyList() const
+map<string, vector<Edge>> Graph::getAdjacencyList() const
 {
     return adjacencyList;
 }

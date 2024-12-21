@@ -5,6 +5,8 @@
 #include "algorithms.h"
 #include <string>
 
+using namespace std;
+
 class Application
 {
 public:
@@ -20,9 +22,9 @@ private:
     void clearInputBuffer();
     void displayMenu();
     void displayAvailableLocations();
-    bool isValidLocation(const std::string &location);
-    std::pair<std::string, std::string> getSourceAndDestination();
-    void findPath(const std::string &algorithm, const std::string &source, const std::string &destination);
+    bool isValidLocation(const string &location);
+    pair<string, string> getSourceAndDestination();
+    void findPath(const string &algorithm, const string &source, const string &destination);
     void handleChoice(int choice);
 };
 
