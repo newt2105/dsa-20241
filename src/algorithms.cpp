@@ -1,4 +1,3 @@
-// algorithms.cpp
 #include "algorithms.h"
 #include <vector>
 #include <string>
