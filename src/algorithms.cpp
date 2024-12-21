@@ -173,12 +173,50 @@ vector<string> Algorithms::astar(const Graph &graph,
 }
 
 void Algorithms::displayPath(const vector<string> &path,
-                             const string &algorithm)
+                             const string &algorithm,
+                             const Graph &graph)
 {
     if (path.empty())
     {
-        cout << "No path found using " << algorithm << "!" << endl;
+        cout << algorithm << " found no valid path!" << endl;
         return;
+    }
+
+    // Calculate total distance
+    double totalDistance = 0.0;
+    auto edges = graph.getEdges();
+    auto nodes = graph.getNodes();
+
+    for (size_t i = 0; i < path.size() - 1; ++i)
+    {
+        string current = path[i];
+        string next = path[i + 1];
+        bool foundEdge = false;
+
+        // Check both directions for each edge
+        for (const auto &edge : edges)
+        {
+            // Check forward direction
+            if (nodes[edge.from].id == current && nodes[edge.to].id == next)
+            {
+                totalDistance += edge.weight;
+                foundEdge = true;
+                break;
+            }
+            // Check reverse direction for two-way edges
+            if (!edge.direction && nodes[edge.from].id == next && nodes[edge.to].id == current)
+            {
+                totalDistance += edge.weight;
+                foundEdge = true;
+                break;
+            }
+        }
+
+        if (!foundEdge)
+        {
+            cout << algorithm << " error: No valid edge between " << current << " and " << next << endl;
+            return;
+        }
     }
 
     cout << algorithm << " path: ";
@@ -188,5 +226,5 @@ void Algorithms::displayPath(const vector<string> &path,
         if (i < path.size() - 1)
             cout << " -> ";
     }
-    cout << endl;
+    cout << "\nTotal distance: " << fixed << setprecision(1) << totalDistance << " km" << endl;
 }

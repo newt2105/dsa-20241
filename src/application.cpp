@@ -113,7 +113,7 @@ void Application::findPath(const string &algorithm,
         path = Algorithms::astar(hanoiMap, source, destination);
     }
 
-    Algorithms::displayPath(path, algorithm);
+    Algorithms::displayPath(path, algorithm, hanoiMap);
 }
 
 void Application::handleChoice(int choice)

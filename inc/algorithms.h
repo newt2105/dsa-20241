@@ -1,11 +1,12 @@
 #ifndef ALGORITHMS_H
 #define ALGORITHMS_H
 
+#include "graph.h"
 #include <queue>
 #include <unordered_map>
-#include <limits>
 #include <cmath>
-#include "graph.h"
+#include <iomanip>
+
 using namespace std;
 
 class Algorithms
@@ -17,16 +18,20 @@ private:
                         pair<string, double> const &p2);
     };
 
-public:
     static double calculateDistance(const Node &node1, const Node &node2);
+
+public:
     static vector<string> dijkstra(const Graph &graph,
                                    const string &start,
                                    const string &end);
+
     static vector<string> astar(const Graph &graph,
                                 const string &start,
                                 const string &end);
+
     static void displayPath(const vector<string> &path,
-                            const string &algorithm);
+                            const string &algorithm,
+                            const Graph &graph);
 };
 
-#endif /* ALGORITHMS_H */
+#endif
