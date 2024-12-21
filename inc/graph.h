@@ -1,51 +1,42 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <iostream>
+#include <string>
 #include <vector>
 #include <map>
-#include <string>
-#include <algorithm>
-#include <fstream>
-#include <sstream>
-using namespace std;
 
-struct Node
-{
+struct Node {
     std::string id;
-    double x;
-    double y;
+    double x, y;
 };
 
-struct Edge
-{
-    bool direction;
+struct Edge {
+    bool direction; // true = one-way, false = two-way
     double weight;
-    double from;
-    double to;
+    Node from; // Changed from index to Node
+    Node to;   // Changed from index to Node
 
-    Edge(bool dir, double w, double f, double t)
-        : direction(dir), weight(w), from(f), to(t) {}
+    Edge(bool direction, double weight, const Node &from, const Node &to)
+        : direction(direction), weight(weight), from(from), to(to) {}
 };
 
-class Graph
-{
-private:
-    vector<Node> nodes;
-    vector<Edge> edges;
-    map<string, vector<Edge>> adjacencyList;
-
-    void draw();
-    void setupMap();
-
+class Graph {
 public:
     Graph();
-    void addNode(string id, double x, double y);
-    void addEdge(string fromId, string toId, bool isOneWay, double weight);
-    vector<Node> getNodes() const;
-    vector<Edge> getEdges() const;
-    map<string, vector<Edge>> getAdjacencyList() const;
+    void addNode(const std::string &id, double x, double y);
+    void addEdge(const std::string &fromId, const std::string &toId, bool isOneWay, double weight);
+    std::vector<Node> getNodes() const;
+    std::vector<Edge> getEdges() const;
+    std::map<std::string, std::vector<Edge>> getAdjacencyList() const;
     void displayGraph();
+
+private:
+    std::vector<Node> nodes;
+    std::vector<Edge> edges;
+    std::map<std::string, std::vector<Edge>> adjacencyList;
+
+    void setupMap();
+    void draw();
 };
 
-#endif /* GRAPH_H */
+#endif

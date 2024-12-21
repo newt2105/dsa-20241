@@ -1,13 +1,16 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "algorithms.h"
 #include "graph.h"
-#include <limits>
+#include "algorithms.h"
 #include <string>
 
 class Application
 {
+public:
+    Application();
+    void run();
+
 private:
     Graph hanoiMap;
     bool firstRun;
@@ -21,10 +24,6 @@ private:
     std::pair<std::string, std::string> getSourceAndDestination();
     void findPath(const std::string &algorithm, const std::string &source, const std::string &destination);
     void handleChoice(int choice);
-
-public:
-    Application();
-    void run();
 };
 
 #endif

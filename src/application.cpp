@@ -1,5 +1,7 @@
 #include "application.h"
 #include <iostream>
+#include <limits>
+#include <algorithm>
 
 using namespace std;
 
@@ -16,7 +18,7 @@ void Application::clearScreen()
 
 void Application::waitForEnter()
 {
-    cout << "\nPress Enter to return to main menu...";
+    cout << "\nPress Enter to return to the main menu...";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
@@ -88,7 +90,7 @@ pair<string, string> Application::getSourceAndDestination()
             {
                 break;
             }
-            cout << "Destination cannot be the same as starting location!\n";
+            cout << "Destination cannot be the same as the starting location!\n";
         }
         else
         {
@@ -99,8 +101,7 @@ pair<string, string> Application::getSourceAndDestination()
     return make_pair(source, destination);
 }
 
-void Application::findPath(const string &algorithm,
-                           const string &source, const string &destination)
+void Application::findPath(const string &algorithm, const string &source, const string &destination)
 {
     vector<string> path;
 

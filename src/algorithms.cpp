@@ -1,10 +1,13 @@
+// algorithms.cpp
 #include "algorithms.h"
-
-bool Algorithms::CompareDistance::operator()(pair<string, double> const &p1,
-                                             pair<string, double> const &p2)
-{
-    return p1.second > p2.second;
-}
+#include <vector>
+#include <string>
+#include <cmath>
+#include <unordered_map>
+#include <queue>
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
 
 double Algorithms::calculateDistance(const Node &node1, const Node &node2)
 {
@@ -21,30 +24,28 @@ double Algorithms::calculateDistance(const Node &node1, const Node &node2)
     return R * c;
 }
 
-vector<string> Algorithms::dijkstra(const Graph &graph,
-                                    const string &start,
-                                    const string &end)
+std::vector<std::string> Algorithms::dijkstra(const Graph &graph, const std::string &start, const std::string &end)
 {
     auto nodes = graph.getNodes();
     auto adjacencyList = graph.getAdjacencyList();
 
-    unordered_map<string, double> distances;
-    unordered_map<string, string> previous;
-    priority_queue<pair<string, double>,
-                   vector<pair<string, double>>,
-                   CompareDistance>
+    std::unordered_map<std::string, double> distances;
+    std::unordered_map<std::string, std::string> previous;
+    std::priority_queue<std::pair<double, std::string>,
+                        std::vector<std::pair<double, std::string>>,
+                        std::greater<>>
         pq;
 
     for (const auto &node : nodes)
     {
-        distances[node.id] = numeric_limits<double>::infinity();
+        distances[node.id] = std::numeric_limits<double>::infinity();
     }
     distances[start] = 0;
-    pq.push({start, 0});
+    pq.emplace(0, start);
 
     while (!pq.empty())
     {
-        string current = pq.top().first;
+        auto [currentDistance, current] = pq.top();
         pq.pop();
 
         if (current == end)
@@ -54,56 +55,38 @@ vector<string> Algorithms::dijkstra(const Graph &graph,
         {
             for (const auto &edge : adjacencyList.at(current))
             {
-                string next = nodes[edge.to].id;
+                std::string next = edge.to.id;
                 double newDist = distances[current] + edge.weight;
 
                 if (newDist < distances[next])
                 {
                     distances[next] = newDist;
                     previous[next] = current;
-                    pq.push({next, newDist});
+                    pq.emplace(newDist, next);
                 }
             }
         }
     }
 
-    vector<string> path;
-    string current = end;
-    while (current != start)
+    std::vector<std::string> path;
+    for (std::string current = end; current != start; current = previous[current])
     {
         if (previous.find(current) == previous.end())
         {
-            return vector<string>();
+            return {}; // No path found
         }
         path.push_back(current);
-        current = previous[current];
     }
     path.push_back(start);
-    reverse(path.begin(), path.end());
+    std::reverse(path.begin(), path.end());
 
     return path;
 }
 
-vector<string> Algorithms::astar(const Graph &graph,
-                                 const string &start,
-                                 const string &end)
+std::vector<std::string> Algorithms::astar(const Graph &graph, const std::string &start, const std::string &end)
 {
     auto nodes = graph.getNodes();
     auto adjacencyList = graph.getAdjacencyList();
-
-    unordered_map<string, double> gScore;
-    unordered_map<string, double> fScore;
-    unordered_map<string, string> previous;
-    priority_queue<pair<string, double>,
-                   vector<pair<string, double>>,
-                   CompareDistance>
-        openSet;
-
-    for (const auto &node : nodes)
-    {
-        gScore[node.id] = numeric_limits<double>::infinity();
-        fScore[node.id] = numeric_limits<double>::infinity();
-    }
 
     Node startNode, endNode;
     for (const auto &node : nodes)
@@ -114,13 +97,26 @@ vector<string> Algorithms::astar(const Graph &graph,
             endNode = node;
     }
 
+    std::unordered_map<std::string, double> gScore, fScore;
+    std::unordered_map<std::string, std::string> previous;
+    std::priority_queue<std::pair<double, std::string>,
+                        std::vector<std::pair<double, std::string>>,
+                        std::greater<>>
+        openSet;
+
+    for (const auto &node : nodes)
+    {
+        gScore[node.id] = std::numeric_limits<double>::infinity();
+        fScore[node.id] = std::numeric_limits<double>::infinity();
+    }
+
     gScore[start] = 0;
     fScore[start] = calculateDistance(startNode, endNode);
-    openSet.push({start, fScore[start]});
+    openSet.emplace(fScore[start], start);
 
     while (!openSet.empty())
     {
-        string current = openSet.top().first;
+        auto [currentFScore, current] = openSet.top();
         openSet.pop();
 
         if (current == end)
@@ -130,101 +126,78 @@ vector<string> Algorithms::astar(const Graph &graph,
         {
             for (const auto &edge : adjacencyList.at(current))
             {
-                string next = nodes[edge.to].id;
+                std::string next = edge.to.id;
                 double tentativeGScore = gScore[current] + edge.weight;
 
                 if (tentativeGScore < gScore[next])
                 {
                     previous[next] = current;
                     gScore[next] = tentativeGScore;
-
-                    Node nextNode;
-                    for (const auto &node : nodes)
-                    {
-                        if (node.id == next)
-                        {
-                            nextNode = node;
-                            break;
-                        }
-                    }
-
-                    fScore[next] = gScore[next] + calculateDistance(nextNode, endNode);
-                    openSet.push({next, fScore[next]});
+                    fScore[next] = gScore[next] + calculateDistance(edge.to, endNode);
+                    openSet.emplace(fScore[next], next);
                 }
             }
         }
     }
 
-    vector<string> path;
-    string current = end;
-    while (current != start)
+    std::vector<std::string> path;
+    for (std::string current = end; current != start; current = previous[current])
     {
         if (previous.find(current) == previous.end())
         {
-            return vector<string>();
+            return {}; // No path found
         }
         path.push_back(current);
-        current = previous[current];
     }
     path.push_back(start);
-    reverse(path.begin(), path.end());
+    std::reverse(path.begin(), path.end());
 
     return path;
 }
 
-void Algorithms::displayPath(const vector<string> &path,
-                             const string &algorithm,
-                             const Graph &graph)
+void Algorithms::displayPath(const std::vector<std::string> &path, const std::string &algorithm, const Graph &graph)
 {
     if (path.empty())
     {
-        cout << algorithm << " found no valid path!" << endl;
+        std::cout << algorithm << " found no valid path!" << std::endl;
         return;
     }
 
-    // Calculate total distance
     double totalDistance = 0.0;
-    auto edges = graph.getEdges();
-    auto nodes = graph.getNodes();
+    auto adjacencyList = graph.getAdjacencyList();
 
     for (size_t i = 0; i < path.size() - 1; ++i)
     {
-        string current = path[i];
-        string next = path[i + 1];
+        std::string current = path[i];
+        std::string next = path[i + 1];
         bool foundEdge = false;
 
-        // Check both directions for each edge
-        for (const auto &edge : edges)
+        if (adjacencyList.find(current) != adjacencyList.end())
         {
-            // Check forward direction
-            if (nodes[edge.from].id == current && nodes[edge.to].id == next)
+            for (const auto &edge : adjacencyList.at(current))
             {
-                totalDistance += edge.weight;
-                foundEdge = true;
-                break;
-            }
-            // Check reverse direction for two-way edges
-            if (!edge.direction && nodes[edge.from].id == next && nodes[edge.to].id == current)
-            {
-                totalDistance += edge.weight;
-                foundEdge = true;
-                break;
+                if (edge.to.id == next)
+                {
+                    totalDistance += edge.weight;
+                    foundEdge = true;
+                    break;
+                }
             }
         }
 
         if (!foundEdge)
         {
-            cout << algorithm << " error: No valid edge between " << current << " and " << next << endl;
+            std::cout << algorithm << " error: No valid edge between " << current << " and " << next << std::endl;
             return;
         }
     }
 
-    cout << algorithm << " path: ";
+    std::cout << algorithm << " path: ";
     for (size_t i = 0; i < path.size(); ++i)
     {
-        cout << path[i];
+        std::cout << path[i];
         if (i < path.size() - 1)
-            cout << " -> ";
+            std::cout << " -> ";
     }
-    cout << "\nTotal distance: " << fixed << setprecision(1) << totalDistance << " km" << endl;
+    std::cout << "\nTotal distance: " << std::fixed << std::setprecision(1) << totalDistance << " km" << std::endl;
 }
