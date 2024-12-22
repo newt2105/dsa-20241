@@ -4,7 +4,7 @@
 
 ```bash
 sudo apt update && sudo apt upgrade -y
-sudo apt install build-essential cmake ninja graphviz
+sudo apt install build-essential cmake ninja-build graphviz
 ```
 
 ## Clone Repository
