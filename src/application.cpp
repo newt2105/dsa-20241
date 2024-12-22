@@ -3,6 +3,7 @@
 #include <iostream>
 #include <limits>
 #include <algorithm>
+#include <iomanip>
 
 using namespace std;
 
@@ -29,19 +30,6 @@ void Application::clearInputBuffer()
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-// void Application::displayMenu()
-// {
-//     clearScreen();
-//     cout << "\n====== Hanoi Map Pathfinding System ======\n";
-//     cout << "1. Display map information\n";
-//     cout << "2. Find path using Dijkstra's algorithm\n";
-//     cout << "3. Find path using A* algorithm\n";
-//     cout << "4. Compare both algorithms\n";
-//     cout << "5. Exit\n";
-//     cout << "=========================================\n";
-//     cout << "Enter your choice (1-5): ";
-// }
-
 void Application::displayMenu()
 {
     clearScreen();
@@ -65,12 +53,16 @@ void Application::displayMenu()
 
 void Application::displayAvailableLocations()
 {
-    cout << "\nAvailable locations:\n";
+    ConsoleTable table(1);
+    table.AddNewRow({"Available Locations"});
+    
     vector<Node> nodes = hanoiMap.getNodes();
     for (const auto &node : nodes)
     {
-        cout << "- " << node.id << endl;
+        table.AddNewRow({node.id});
     }
+    
+    table.WriteTable(Align::Center);
 }
 
 bool Application::isValidLocation(const string &location)
@@ -88,6 +80,10 @@ pair<string, string> Application::getSourceAndDestination()
     string source, destination;
 
     displayAvailableLocations();
+
+    ConsoleTable inputTable(1);
+    inputTable.AddNewRow({"Enter Path Details"});
+    inputTable.WriteTable(Align::Center);
 
     while (true)
     {
@@ -127,6 +123,9 @@ void Application::findPath(const string &algorithm, const string &source, const 
 {
     vector<string> path;
 
+    ConsoleTable resultTable(1);
+    resultTable.AddNewRow({algorithm + " Path Results"});
+
     if (algorithm == "Dijkstra")
     {
         path = Algorithms::dijkstra(hanoiMap, source, destination);
@@ -136,7 +135,29 @@ void Application::findPath(const string &algorithm, const string &source, const 
         path = Algorithms::astar(hanoiMap, source, destination);
     }
 
-    Algorithms::displayPath(path, algorithm, hanoiMap);
+    if (!path.empty())
+    {
+        string pathStr;
+        for (size_t i = 0; i < path.size(); ++i)
+        {
+            pathStr += path[i];
+            if (i < path.size() - 1)
+                pathStr += " -> ";
+        }
+        
+        double distance = Algorithms::totalDistance(path, hanoiMap);
+        stringstream distanceStr;
+        distanceStr << fixed << setprecision(1) << distance << " km";
+        
+        resultTable.AddNewRow({"Path: " + pathStr});
+        resultTable.AddNewRow({"Total Distance: " + distanceStr.str()});
+    }
+    else
+    {
+        resultTable.AddNewRow({"No valid path found!"});
+    }
+
+    resultTable.WriteTable(Align::Left);
 }
 
 void Application::handleChoice(int choice)
@@ -147,14 +168,19 @@ void Application::handleChoice(int choice)
     {
     case 1:
     {
-        cout << "\n=== Map Information ===\n";
+        ConsoleTable infoTable(3);
+        infoTable.AddNewRow({"Map Information"});
+        infoTable.WriteTable(Align::Center);
         hanoiMap.displayGraph();
         break;
     }
 
     case 2:
     {
-        cout << "\n=== Dijkstra's Algorithm Pathfinding ===\n";
+        ConsoleTable header(1);
+        header.AddNewRow({"Dijkstra's Algorithm Pathfinding"});
+        header.WriteTable(Align::Center);
+        
         auto [source, destination] = getSourceAndDestination();
         findPath("Dijkstra", source, destination);
         break;
@@ -162,7 +188,10 @@ void Application::handleChoice(int choice)
 
     case 3:
     {
-        cout << "\n=== A* Algorithm Pathfinding ===\n";
+        ConsoleTable header(1);
+        header.AddNewRow({"A* Algorithm Pathfinding"});
+        header.WriteTable(Align::Center);
+        
         auto [source, destination] = getSourceAndDestination();
         findPath("A*", source, destination);
         break;
@@ -170,9 +199,16 @@ void Application::handleChoice(int choice)
 
     case 4:
     {
-        cout << "\n=== Algorithm Comparison ===\n";
+        ConsoleTable header(1);
+        header.AddNewRow({"Algorithm Comparison"});
+        header.WriteTable(Align::Center);
+        
         auto [source, destination] = getSourceAndDestination();
-        cout << "\nResults:\n";
+        
+        ConsoleTable resultTable(1);
+        resultTable.AddNewRow({"Comparison Results"});
+        resultTable.WriteTable(Align::Center);
+        
         findPath("Dijkstra", source, destination);
         findPath("A*", source, destination);
         break;
@@ -180,13 +216,17 @@ void Application::handleChoice(int choice)
 
     case 5:
     {
-        cout << "\nThank you for using the Hanoi Map Pathfinding System!\n";
+        ConsoleTable exitTable(1);
+        exitTable.AddNewRow({"Thank you for using the Hanoi Map Pathfinding System!"});
+        exitTable.WriteTable(Align::Center);
         exit(0);
     }
 
     default:
     {
-        cout << "Invalid choice! Please enter a number between 1 and 5.\n";
+        ConsoleTable errorTable(1);
+        errorTable.AddNewRow({"Invalid choice! Please enter a number between 1 and 5."});
+        errorTable.WriteTable(Align::Center);
         break;
     }
     }
@@ -215,7 +255,9 @@ void Application::run()
         catch (...)
         {
             clearScreen();
-            cout << "Invalid input! Please enter a number between 1 and 5.\n";
+            ConsoleTable errorTable(1);
+            errorTable.AddNewRow({"Invalid input! Please enter a number between 1 and 5."});
+            errorTable.WriteTable(Align::Center);
             continue;
         }
 
