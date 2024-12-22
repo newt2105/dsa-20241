@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <cmath>
 #include <filesystem>
 
@@ -9,7 +10,7 @@ using namespace std;
 
 Graph::Graph()
 {
-    setupMap();
+    loadFromFile("/home/dihnhuunam/Workspace/dsa-20241/data.txt");
     draw();
 }
 
@@ -59,37 +60,89 @@ map<string, vector<Edge>> Graph::getAdjacencyList() const
 
 void Graph::displayGraph()
 {
-    cout << "Hanoi Map Graph:\n\nNodes:" << endl;
-    for (const auto &node : nodes)
+    if (nodes.empty())
     {
-        cout << node.id << " (" << node.x << ", " << node.y << ")" << endl;
+        cout << "Warning: No nodes loaded\n";
+        return;
     }
 
-    cout << "\nEdges:" << endl;
+    cout << "Nodes:\n";
+    for (const auto &node : nodes)
+    {
+        cout << "- " << node.id << " (" << node.x << ", " << node.y << ")\n";
+    }
+
+    if (edges.empty())
+    {
+        cout << "Warning: No edges loaded\n";
+        return;
+    }
+
+    cout << "\nEdges:\n";
     for (const auto &edge : edges)
     {
-        cout << edge.from.id << " -> " << edge.to.id;
-        cout << " (Weight: " << edge.weight << "km)";
-        cout << (edge.direction ? " (One-way)" : " (Two-way)") << endl;
+        cout << edge.from.id << " -> " << edge.to.id
+             << " (Weight: " << edge.weight
+             << ", Direction: " << (edge.direction ? "One-way" : "Two-way") << ")\n";
     }
 }
 
-void Graph::setupMap()
+void Graph::loadFromFile(const string &filePath)
 {
-    addNode("HoanKiem", 21.0285, 105.8542);
-    addNode("WestLake", 21.0587, 105.8229);
-    addNode("LongBien", 21.0437, 105.8625);
-    addNode("CauGiay", 21.0359, 105.7929);
-    addNode("ThanhXuan", 21.0071, 105.8135);
-    addNode("HaDong", 20.9718, 105.7852);
+    ifstream inputFile(filePath);
 
-    addEdge("HoanKiem", "WestLake", true, 5.2);
-    addEdge("WestLake", "CauGiay", true, 4.1);
-    addEdge("LongBien", "HoanKiem", true, 3.8);
-    addEdge("CauGiay", "ThanhXuan", false, 4.5);
-    addEdge("ThanhXuan", "HaDong", true, 6.3);
-    addEdge("HoanKiem", "ThanhXuan", false, 5.0);
-    addEdge("LongBien", "WestLake", false, 4.7);
+    if (!inputFile.is_open())
+    {
+        cerr << "Error: Unable to open file " << filePath << endl;
+        return;
+    }
+
+    string line, section;
+    while (getline(inputFile, line))
+    {
+        // Bỏ qua dòng trống hoặc dòng chú thích
+        if (line.empty() || line[0] == '#')
+            continue;
+
+        if (line == "Nodes")
+        {
+            section = "Nodes";
+            continue;
+        }
+        else if (line == "Edges")
+        {
+            section = "Edges";
+            continue;
+        }
+
+        if (section == "Nodes")
+        {
+            string id;
+            double x, y;
+            istringstream iss(line);
+            if (!(iss >> id >> x >> y))
+            {
+                cerr << "Error parsing Node: " << line << endl;
+                continue;
+            }
+            addNode(id, x, y);
+        }
+        else if (section == "Edges")
+        {
+            string fromId, toId;
+            double weight;
+            int direction;
+            istringstream iss(line);
+            if (!(iss >> fromId >> toId >> weight >> direction))
+            {
+                cerr << "Error parsing Edge: " << line << endl;
+                continue;
+            }
+            addEdge(fromId, toId, direction == 1, weight);
+        }
+    }
+
+    inputFile.close();
 }
 
 void Graph::draw()

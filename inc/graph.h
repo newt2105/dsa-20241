@@ -33,13 +33,13 @@ public:
     vector<Edge> getEdges() const;
     map<string, vector<Edge>> getAdjacencyList() const;
     void displayGraph();
+    void loadFromFile(const string &filePath);
 
 private:
     vector<Node> nodes;
     vector<Edge> edges;
     map<string, vector<Edge>> adjacencyList;
 
-    void setupMap();
     void draw();
 };
 
