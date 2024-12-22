@@ -49,19 +49,20 @@ void Application::displayMenu()
     table.AddNewRow(row5);
 
     table.WriteTable(Align::Center);
+    cout << "Enter your choice: ";
 }
 
 void Application::displayAvailableLocations()
 {
     ConsoleTable table(1);
     table.AddNewRow({"Available Locations"});
-    
+
     vector<Node> nodes = hanoiMap.getNodes();
     for (const auto &node : nodes)
     {
         table.AddNewRow({node.id});
     }
-    
+
     table.WriteTable(Align::Center);
 }
 
@@ -144,11 +145,11 @@ void Application::findPath(const string &algorithm, const string &source, const 
             if (i < path.size() - 1)
                 pathStr += " -> ";
         }
-        
+
         double distance = Algorithms::totalDistance(path, hanoiMap);
         stringstream distanceStr;
         distanceStr << fixed << setprecision(1) << distance << " km";
-        
+
         resultTable.AddNewRow({"Path: " + pathStr});
         resultTable.AddNewRow({"Total Distance: " + distanceStr.str()});
     }
@@ -168,9 +169,7 @@ void Application::handleChoice(int choice)
     {
     case 1:
     {
-        ConsoleTable infoTable(3);
-        infoTable.AddNewRow({"Map Information"});
-        infoTable.WriteTable(Align::Center);
+        cout << "Map Information\n";
         hanoiMap.displayGraph();
         break;
     }
@@ -180,8 +179,9 @@ void Application::handleChoice(int choice)
         ConsoleTable header(1);
         header.AddNewRow({"Dijkstra's Algorithm Pathfinding"});
         header.WriteTable(Align::Center);
-        
+
         auto [source, destination] = getSourceAndDestination();
+        clearScreen();
         findPath("Dijkstra", source, destination);
         break;
     }
@@ -191,8 +191,9 @@ void Application::handleChoice(int choice)
         ConsoleTable header(1);
         header.AddNewRow({"A* Algorithm Pathfinding"});
         header.WriteTable(Align::Center);
-        
+
         auto [source, destination] = getSourceAndDestination();
+        clearScreen();
         findPath("A*", source, destination);
         break;
     }
@@ -202,13 +203,13 @@ void Application::handleChoice(int choice)
         ConsoleTable header(1);
         header.AddNewRow({"Algorithm Comparison"});
         header.WriteTable(Align::Center);
-        
+
         auto [source, destination] = getSourceAndDestination();
-        
+
         ConsoleTable resultTable(1);
         resultTable.AddNewRow({"Comparison Results"});
         resultTable.WriteTable(Align::Center);
-        
+        clearScreen();
         findPath("Dijkstra", source, destination);
         findPath("A*", source, destination);
         break;
