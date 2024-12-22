@@ -45,7 +45,7 @@ void Application::clearInputBuffer()
 void Application::displayMenu()
 {
     clearScreen();
-    ConsoleTable webpages(1);
+    ConsoleTable table(1);
     Row header = {"Ha Noi Path Finding System"};
     Row row1 = {"1. Display map information"};
     Row row2 = {"2. Find path using Dijkstra's algorithm"};
@@ -53,14 +53,14 @@ void Application::displayMenu()
     Row row4 = {"4. Compare both algorithms"};
     Row row5 = {"5. Exit"};
 
-    webpages.AddNewRow(header);
-    webpages.AddNewRow(row1);
-    webpages.AddNewRow(row2);
-    webpages.AddNewRow(row3);
-    webpages.AddNewRow(row4);
-    webpages.AddNewRow(row5);
+    table.AddNewRow(header);
+    table.AddNewRow(row1);
+    table.AddNewRow(row2);
+    table.AddNewRow(row3);
+    table.AddNewRow(row4);
+    table.AddNewRow(row5);
 
-    webpages.WriteTable(Align::Center);
+    table.WriteTable(Align::Center);
 }
 
 void Application::displayAvailableLocations()
