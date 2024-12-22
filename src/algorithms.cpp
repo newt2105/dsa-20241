@@ -33,8 +33,8 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
     unordered_map<string, double> distances;
     unordered_map<string, string> previous;
     priority_queue<pair<double, string>,
-                        vector<pair<double, string>>,
-                        greater<>>
+                   vector<pair<double, string>>,
+                   greater<>>
         pq;
 
     for (const auto &node : nodes)
@@ -101,8 +101,8 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
     unordered_map<string, double> gScore, fScore;
     unordered_map<string, string> previous;
     priority_queue<pair<double, string>,
-                        vector<pair<double, string>>,
-                        greater<>>
+                   vector<pair<double, string>>,
+                   greater<>>
         openSet;
 
     for (const auto &node : nodes)
@@ -156,14 +156,8 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
     return path;
 }
 
-void Algorithms::displayPath(const vector<string> &path, const string &algorithm, const Graph &graph)
+double Algorithms::totalDistance(const vector<string> &path, const Graph &graph)
 {
-    if (path.empty())
-    {
-        cout << algorithm << " found no valid path!" << endl;
-        return;
-    }
-
     double totalDistance = 0.0;
     auto adjacencyList = graph.getAdjacencyList();
 
@@ -188,17 +182,36 @@ void Algorithms::displayPath(const vector<string> &path, const string &algorithm
 
         if (!foundEdge)
         {
-            cout << algorithm << " error: No valid edge between " << current << " and " << next << endl;
-            return;
+            throw runtime_error("No valid edge between " + current + " and " + next);
         }
     }
 
-    cout << algorithm << " path: ";
-    for (size_t i = 0; i < path.size(); ++i)
+    return totalDistance;
+}
+
+void Algorithms::displayPath(const vector<string> &path, const string &algorithm, const Graph &graph)
+{
+    if (path.empty())
     {
-        cout << path[i];
-        if (i < path.size() - 1)
-            cout << " -> ";
+        cout << algorithm << " found no valid path!" << endl;
+        return;
     }
-    cout << "\nTotal distance: " << fixed << setprecision(1) << totalDistance << " km" << endl;
+
+    try
+    {
+        double totalDist = totalDistance(path, graph);
+
+        cout << algorithm << " path: ";
+        for (size_t i = 0; i < path.size(); ++i)
+        {
+            cout << path[i];
+            if (i < path.size() - 1)
+                cout << " -> ";
+        }
+        cout << "\nTotal distance: " << fixed << setprecision(1) << totalDist << " km" << endl;
+    }
+    catch (const exception &e)
+    {
+        cout << algorithm << " error: " << e.what() << endl;
+    }
 }
