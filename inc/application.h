@@ -22,8 +22,10 @@ private:
     void clearInputBuffer();
     void displayMenu();
     void displayAvailableLocations();
+    void displayAvailableLocationsWithHeader(const string &headerText); // New declaration
     bool isValidLocation(const string &location);
     pair<string, string> getSourceAndDestination();
+    pair<string, string> getSourceAndDestinationWithHeader(const string &headerText); // New declaration
     void findPath(const string &algorithm, const string &source, const string &destination);
     void handleChoice(int choice);
 };
