@@ -14,7 +14,7 @@ void Application::clearScreen()
 #ifdef _WIN32
     system("cls");
 #else
-    system("clear");
+    int clear = system("clear");
 #endif
 }
 
