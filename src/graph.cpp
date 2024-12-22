@@ -183,4 +183,5 @@ void Graph::draw()
     dotFile.close();
 
     string command = "dot -Tpng " + outputDir + "hanoi_map.dot -o " + outputDir + "hanoi_map.png";
+    system(command.c_str());
 }
