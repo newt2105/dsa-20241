@@ -1,4 +1,5 @@
 #include "application.h"
+#include "ultis.h"
 #include <iostream>
 #include <limits>
 #include <algorithm>
@@ -28,17 +29,38 @@ void Application::clearInputBuffer()
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+// void Application::displayMenu()
+// {
+//     clearScreen();
+//     cout << "\n====== Hanoi Map Pathfinding System ======\n";
+//     cout << "1. Display map information\n";
+//     cout << "2. Find path using Dijkstra's algorithm\n";
+//     cout << "3. Find path using A* algorithm\n";
+//     cout << "4. Compare both algorithms\n";
+//     cout << "5. Exit\n";
+//     cout << "=========================================\n";
+//     cout << "Enter your choice (1-5): ";
+// }
+
 void Application::displayMenu()
 {
     clearScreen();
-    cout << "\n====== Hanoi Map Pathfinding System ======\n";
-    cout << "1. Display map information\n";
-    cout << "2. Find path using Dijkstra's algorithm\n";
-    cout << "3. Find path using A* algorithm\n";
-    cout << "4. Compare both algorithms\n";
-    cout << "5. Exit\n";
-    cout << "=========================================\n";
-    cout << "Enter your choice (1-5): ";
+    ConsoleTable webpages(1);
+    Row header = {"Ha Noi Path Finding System"};
+    Row row1 = {"1. Display map information"};
+    Row row2 = {"2. Find path using Dijkstra's algorithm"};
+    Row row3 = {"3. Find path using A* algorithm"};
+    Row row4 = {"4. Compare both algorithms"};
+    Row row5 = {"5. Exit"};
+
+    webpages.AddNewRow(header);
+    webpages.AddNewRow(row1);
+    webpages.AddNewRow(row2);
+    webpages.AddNewRow(row3);
+    webpages.AddNewRow(row4);
+    webpages.AddNewRow(row5);
+
+    webpages.WriteTable(Align::Center);
 }
 
 void Application::displayAvailableLocations()
