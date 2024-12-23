@@ -1,5 +1,6 @@
 #include "application.h"
 #include "ultis.h"
+#include "color.h"
 #include <iostream>
 #include <limits>
 #include <algorithm>
@@ -29,16 +30,7 @@ void Application::clearScreen()
  */
 void Application::waitForEnter()
 {
-    cout << "\nPress Enter to return to the main menu...";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
-/**
- * @brief Clears the input buffer
- */
-void Application::clearInputBuffer()
-{
-    cin.clear();
+    cout << YELLOW "\nPress Enter to return to the main menu..." RESET;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
@@ -49,12 +41,12 @@ void Application::displayMenu()
 {
     clearScreen();
     ConsoleTable table(1);
-    Row header = {"Ha Noi Path Finding System"};
-    Row row1 = {"1. Display map information"};
-    Row row2 = {"2. Find path using Dijkstra's algorithm"};
-    Row row3 = {"3. Find path using A* algorithm"};
-    Row row4 = {"4. Compare both algorithms"};
-    Row row5 = {"5. Exit"};
+    Row header = {BOLD BLUE "Ha Noi Path Finding System" RESET};
+    Row row1 = {GREEN "1. Display map information" RESET};
+    Row row2 = {GREEN "2. Find path using Dijkstra's algorithm" RESET};
+    Row row3 = {GREEN "3. Find path using A* algorithm" RESET};
+    Row row4 = {GREEN "4. Compare both algorithms" RESET};
+    Row row5 = {RED "5. Exit" RESET};
 
     table.AddNewRow(header);
     table.AddNewRow(row1);
@@ -64,7 +56,7 @@ void Application::displayMenu()
     table.AddNewRow(row5);
 
     table.WriteTable(Align::Center);
-    cout << "Enter your choice: ";
+    cout << CYAN "Enter your choice: " RESET;
 }
 
 /**
@@ -74,13 +66,13 @@ void Application::displayMenu()
 void Application::displayAvailableLocationsWithHeader(const string &headerText)
 {
     ConsoleTable table(1);
-    table.AddNewRow({headerText});
-    table.AddNewRow({"Available Locations"});
+    table.AddNewRow({BOLD BLUE + headerText + RESET});
+    table.AddNewRow({BOLD YELLOW "Available Locations" RESET});
 
     vector<Node> nodes = hanoiMap.getNodes();
     for (const auto &node : nodes)
     {
-        table.AddNewRow({node.id});
+        table.AddNewRow({CYAN + node.id + RESET});
     }
 
     table.WriteTable(Align::Center);
@@ -157,7 +149,7 @@ void Application::findPath(const string &algorithm, const string &source, const 
     vector<string> path;
 
     ConsoleTable resultTable(1);
-    resultTable.AddNewRow({algorithm + " Path Results"});
+    resultTable.AddNewRow({BOLD BLUE + algorithm + " Path Results" RESET});
 
     if (algorithm == "Dijkstra")
     {
@@ -173,21 +165,21 @@ void Application::findPath(const string &algorithm, const string &source, const 
         string pathStr;
         for (size_t i = 0; i < path.size(); ++i)
         {
-            pathStr += path[i];
+            pathStr += GREEN + path[i] + RESET;
             if (i < path.size() - 1)
-                pathStr += " -> ";
+                pathStr += YELLOW " -> " RESET;
         }
 
         double distance = Algorithms::totalDistance(path, hanoiMap);
         stringstream distanceStr;
-        distanceStr << fixed << setprecision(1) << distance << " km";
+        distanceStr << fixed << setprecision(1) << CYAN << distance << " km" << RESET;
 
         resultTable.AddNewRow({"Path: " + pathStr});
         resultTable.AddNewRow({"Total Distance: " + distanceStr.str()});
     }
     else
     {
-        resultTable.AddNewRow({"No valid path found!"});
+        resultTable.AddNewRow({RED "No valid path found!" RESET});
     }
 
     resultTable.WriteTable(Align::Left);
@@ -205,7 +197,7 @@ void Application::handleChoice(int choice)
     {
     case 1:
     {
-        cout << "Map Information\n";
+        cout << BOLD BLUE "Map Information\n" RESET;
         hanoiMap.displayGraph();
         break;
     }
@@ -229,9 +221,9 @@ void Application::handleChoice(int choice)
     case 4:
     {
         auto [source, destination] = getSourceAndDestinationWithHeader("Algorithm Comparison");
-
         clearScreen();
         findPath("Dijkstra", source, destination);
+        cout << "\n";
         findPath("A*", source, destination);
         break;
     }
@@ -239,7 +231,7 @@ void Application::handleChoice(int choice)
     case 5:
     {
         ConsoleTable exitTable(1);
-        exitTable.AddNewRow({"Thank you for using the Hanoi Map Pathfinding System!"});
+        exitTable.AddNewRow({BOLD GREEN "Thank you for using the Hanoi Map Pathfinding System!" RESET});
         exitTable.WriteTable(Align::Center);
         exit(0);
     }
@@ -247,7 +239,7 @@ void Application::handleChoice(int choice)
     default:
     {
         ConsoleTable errorTable(1);
-        errorTable.AddNewRow({"Invalid choice! Please enter a number between 1 and 5."});
+        errorTable.AddNewRow({RED "Invalid choice! Please enter a number between 1 and 5." RESET});
         errorTable.WriteTable(Align::Center);
         break;
     }

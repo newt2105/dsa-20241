@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "color.h"
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -93,28 +94,28 @@ void Graph::displayGraph()
 {
     if (nodes.empty())
     {
-        cout << "Warning: No nodes loaded\n";
+        cout << RED "Warning: No nodes loaded\n" RESET;
         return;
     }
 
-    cout << "Nodes:\n";
+    cout << BOLD BLUE "Nodes:\n" RESET;
     for (const auto &node : nodes)
     {
-        cout << "- " << node.id << " (" << node.x << ", " << node.y << ")\n";
+        cout << CYAN "- " << node.id << " (" << node.x << ", " << node.y << ")\n" RESET;
     }
 
     if (edges.empty())
     {
-        cout << "Warning: No edges loaded\n";
+        cout << RED "Warning: No edges loaded\n" RESET;
         return;
     }
 
-    cout << "\nEdges:\n";
+    cout << BOLD BLUE "\nEdges:\n" RESET;
     for (const auto &edge : edges)
     {
-        cout << edge.from.id << " -> " << edge.to.id
-             << " (Weight: " << edge.weight
-             << ", Direction: " << (edge.direction ? "One-way" : "Two-way") << ")\n";
+        cout << GREEN << edge.from.id << YELLOW " -> " GREEN << edge.to.id
+             << CYAN " (Weight: " << edge.weight
+             << ", Direction: " << (edge.direction ? "One-way" : "Two-way") << ")" RESET << "\n";
     }
 }
 
