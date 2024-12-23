@@ -1,12 +1,19 @@
 #include "ultis.h"
 
-
+/**
+ * @brief Constructor for ConsoleTable class
+ * @param numberOfColumns Number of columns in the table
+ */
 ConsoleTable::ConsoleTable(unsigned int numberOfColumns) : _numberOfColumns(numberOfColumns)
 {
-
 }
 
-void ConsoleTable::WriteTable(Align align, std::ostream * outputStream) const
+/**
+ * @brief Writes the formatted table to output stream
+ * @param align Text alignment in cells
+ * @param outputStream Output stream to write to
+ */
+void ConsoleTable::WriteTable(Align align, std::ostream *outputStream) const
 {
 	int gridWidth = 0;
 	std::stringstream stream;
@@ -26,11 +33,15 @@ void ConsoleTable::WriteTable(Align align, std::ostream * outputStream) const
 	}
 	WriteBorderToStream(gridWidth, &stream);
 
-	//Write string stream to stream
+	// Write string stream to stream
 	*outputStream << stream.str();
 }
 
-void ConsoleTable::AddNewRow(const std::forward_list<std::string>& list)
+/**
+ * @brief Adds a new row to the table
+ * @param list List of strings representing cell contents
+ */
+void ConsoleTable::AddNewRow(const std::forward_list<std::string> &list)
 {
 	std::vector<std::string> row;
 	row.reserve(_numberOfColumns);
@@ -38,7 +49,14 @@ void ConsoleTable::AddNewRow(const std::forward_list<std::string>& list)
 	_rows.emplace_back(row);
 }
 
-void ConsoleTable::GenerateStream(std::stringstream& stream, Align align, int i, const std::vector<int>& columnsWidth) const
+/**
+ * @brief Generates string stream for table row
+ * @param stream Output stream
+ * @param align Text alignment
+ * @param i Row index
+ * @param columnsWidth Vector of column widths
+ */
+void ConsoleTable::GenerateStream(std::stringstream &stream, Align align, int i, const std::vector<int> &columnsWidth) const
 {
 	if (align == Align::Center)
 		stream << AlignRowToCenter(i, columnsWidth);
@@ -46,11 +64,18 @@ void ConsoleTable::GenerateStream(std::stringstream& stream, Align align, int i,
 		stream << AlignRowToLeftOrRight(align, i, columnsWidth);
 }
 
-std::string ConsoleTable::AlignRowToLeftOrRight(Align align, int index, const std::vector<int>&columnsWidth) const
+/**
+ * @brief Aligns row content to left or right
+ * @param align Text alignment
+ * @param index Row index
+ * @param columnsWidth Vector of column widths
+ * @return Formatted string for row
+ */
+std::string ConsoleTable::AlignRowToLeftOrRight(Align align, int index, const std::vector<int> &columnsWidth) const
 {
 	std::stringstream stream;
 
-	//Write Table to string stream
+	// Write Table to string stream
 	for (int j = 0; j < _numberOfColumns; j++)
 		stream << "|" << std::setw(columnsWidth.at(j)) << ((align == Align::Left) ? std::left : std::right) << _rows[index][j];
 	stream << '|' << std::endl;
@@ -58,11 +83,17 @@ std::string ConsoleTable::AlignRowToLeftOrRight(Align align, int index, const st
 	return stream.str();
 }
 
-std::string  ConsoleTable::AlignRowToCenter(int index, const std::vector<int>&columnsWidth) const
+/**
+ * @brief Aligns row content to center
+ * @param index Row index
+ * @param columnsWidth Vector of column widths
+ * @return Formatted string for row
+ */
+std::string ConsoleTable::AlignRowToCenter(int index, const std::vector<int> &columnsWidth) const
 {
 	std::stringstream stream;
 
-	//Write Table to string stream
+	// Write Table to string stream
 	for (int j = 0; j < _numberOfColumns; j++)
 	{
 		std::string word = _rows[index][j];
@@ -72,9 +103,11 @@ std::string  ConsoleTable::AlignRowToCenter(int index, const std::vector<int>&co
 		else
 		{
 			int index1 = int(columnsWidth.at(j) / 2) - (int(word.length() / 2));
-			for (int i = 0; i < index1; i++) stream << " ";
+			for (int i = 0; i < index1; i++)
+				stream << " ";
 			stream << word;
-			for (int i = index1 + word.length(); i < columnsWidth.at(j); i++) stream << " ";
+			for (int i = index1 + word.length(); i < columnsWidth.at(j); i++)
+				stream << " ";
 		}
 	}
 	stream << '|' << std::endl;
@@ -82,13 +115,23 @@ std::string  ConsoleTable::AlignRowToCenter(int index, const std::vector<int>&co
 	return stream.str();
 }
 
-void ConsoleTable::WriteBorderToStream(int width, std::stringstream* stream) const
+/**
+ * @brief Writes border line to stream
+ * @param width Total width of table
+ * @param stream Output stream
+ */
+void ConsoleTable::WriteBorderToStream(int width, std::stringstream *stream) const
 {
 	*stream << "+";
-	for (int k = 0; k <= width - 4; k++) *stream << "-";
+	for (int k = 0; k <= width - 4; k++)
+		*stream << "-";
 	*stream << "+" << std::endl;
 }
 
+/**
+ * @brief Calculates maximum width needed for each column
+ * @return Vector of maximum widths for each column
+ */
 std::vector<int> ConsoleTable::GetColumnsMaxWidth() const
 {
 	std::vector<int> columnsWidth;
@@ -101,4 +144,3 @@ std::vector<int> ConsoleTable::GetColumnsMaxWidth() const
 	}
 	return columnsWidth;
 }
-

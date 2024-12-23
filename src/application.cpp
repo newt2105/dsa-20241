@@ -7,8 +7,14 @@
 
 using namespace std;
 
+/**
+ * @brief Constructor for Application class
+ */
 Application::Application() : firstRun(true) {}
 
+/**
+ * @brief Clears the console screen
+ */
 void Application::clearScreen()
 {
 #ifdef _WIN32
@@ -18,18 +24,27 @@ void Application::clearScreen()
 #endif
 }
 
+/**
+ * @brief Waits for user to press Enter key
+ */
 void Application::waitForEnter()
 {
     cout << "\nPress Enter to return to the main menu...";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+/**
+ * @brief Clears the input buffer
+ */
 void Application::clearInputBuffer()
 {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+/**
+ * @brief Displays the main menu interface
+ */
 void Application::displayMenu()
 {
     clearScreen();
@@ -52,6 +67,10 @@ void Application::displayMenu()
     cout << "Enter your choice: ";
 }
 
+/**
+ * @brief Displays available locations with a header
+ * @param headerText Text to display as header
+ */
 void Application::displayAvailableLocationsWithHeader(const string &headerText)
 {
     ConsoleTable table(1);
@@ -67,6 +86,11 @@ void Application::displayAvailableLocationsWithHeader(const string &headerText)
     table.WriteTable(Align::Center);
 }
 
+/**
+ * @brief Checks if a location exists in the graph
+ * @param location Location ID to check
+ * @return true if location exists, false otherwise
+ */
 bool Application::isValidLocation(const string &location)
 {
     vector<Node> nodes = hanoiMap.getNodes();
@@ -77,6 +101,11 @@ bool Application::isValidLocation(const string &location)
                    }) != nodes.end();
 }
 
+/**
+ * @brief Gets source and destination locations from user input
+ * @param headerText Text to display as header
+ * @return Pair of strings containing source and destination locations
+ */
 pair<string, string> Application::getSourceAndDestinationWithHeader(const string &headerText)
 {
     string source, destination;
@@ -117,6 +146,12 @@ pair<string, string> Application::getSourceAndDestinationWithHeader(const string
     return make_pair(source, destination);
 }
 
+/**
+ * @brief Finds and displays path between two locations using specified algorithm
+ * @param algorithm Name of the algorithm to use
+ * @param source Starting location
+ * @param destination End location
+ */
 void Application::findPath(const string &algorithm, const string &source, const string &destination)
 {
     vector<string> path;
@@ -158,6 +193,10 @@ void Application::findPath(const string &algorithm, const string &source, const 
     resultTable.WriteTable(Align::Left);
 }
 
+/**
+ * @brief Handles user menu choice
+ * @param choice User's menu selection
+ */
 void Application::handleChoice(int choice)
 {
     clearScreen();
@@ -215,6 +254,9 @@ void Application::handleChoice(int choice)
     }
 }
 
+/**
+ * @brief Main application loop
+ */
 void Application::run()
 {
     string input;
