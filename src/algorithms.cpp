@@ -156,6 +156,55 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
     return path;
 }
 
+vector<string> Algorithms::dfs(const Graph &graph, const string &start, const string &end)
+{
+    auto nodes = graph.getNodes();
+    auto adjacencyList = graph.getAdjacencyList();
+    
+    // Lưu trạng thái đã thăm
+    unordered_map<string, bool> visited;
+    for (const auto &node : nodes)
+    {
+        visited[node.id] = false;
+    }
+
+    vector<string> path;
+    vector<string> result;
+
+    // Hàm đệ quy DFS
+    function<bool(const string &)> dfsHelper = [&](const string &current) {
+        visited[current] = true;
+        path.push_back(current);
+
+        if (current == end)
+        {
+            result = path; // Lưu lại đường đi nếu đến đích
+            return true;
+        }
+
+        if (adjacencyList.find(current) != adjacencyList.end())
+        {
+            for (const auto &edge : adjacencyList.at(current))
+            {
+                string next = edge.to.id;
+                if (!visited[next])
+                {
+                    if (dfsHelper(next))
+                        return true; // Kết thúc khi tìm được đường đi
+                }
+            }
+        }
+
+        path.pop_back(); // Backtracking
+        return false;
+    };
+
+    // Gọi hàm DFS bắt đầu từ `start`
+    dfsHelper(start);
+
+    return result; // Trả về đường đi đã tìm
+}
+
 double Algorithms::totalDistance(const vector<string> &path, const Graph &graph)
 {
     double totalDistance = 0.0;

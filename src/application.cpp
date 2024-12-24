@@ -38,8 +38,9 @@ void Application::displayMenu()
     Row row1 = {"1. Display map information"};
     Row row2 = {"2. Find path using Dijkstra's algorithm"};
     Row row3 = {"3. Find path using A* algorithm"};
-    Row row4 = {"4. Compare both algorithms"};
-    Row row5 = {"5. Exit"};
+    Row row4 = {"4. Find path using DFS algorithm"};
+    Row row5 = {"5. Compare both algorithms"};
+    Row row6 = {"6. Exit"};
 
     table.AddNewRow(header);
     table.AddNewRow(row1);
@@ -47,6 +48,7 @@ void Application::displayMenu()
     table.AddNewRow(row3);
     table.AddNewRow(row4);
     table.AddNewRow(row5);
+    table.AddNewRow(row6);
 
     table.WriteTable(Align::Center);
 }
@@ -133,6 +135,10 @@ void Application::findPath(const string &algorithm, const string &source, const 
     else if (algorithm == "A*")
     {
         path = Algorithms::astar(hanoiMap, source, destination);
+    }
+    else if (algorithm == "DFS")
+    {
+        path = Algorithms::dfs(hanoiMap, source, destination);
     }
 
     if (!path.empty())
