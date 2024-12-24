@@ -10,6 +10,12 @@
 
 using namespace std;
 
+/**
+ * @brief Calculates the great-circle distance between two geographical points using the Haversine formula
+ * @param node1 First geographical point (latitude/longitude)
+ * @param node2 Second geographical point (latitude/longitude)
+ * @return Distance in kilometers between the two points
+ */
 double Algorithms::calculateDistance(const Node &node1, const Node &node2)
 {
     const double R = 6371.0;
@@ -25,6 +31,13 @@ double Algorithms::calculateDistance(const Node &node1, const Node &node2)
     return R * c;
 }
 
+/**
+ * @brief Implements Dijkstra's shortest path algorithm
+ * @param graph Graph containing nodes and edges
+ * @param start ID of the starting node
+ * @param end ID of the destination node
+ * @return Vector of node IDs representing the shortest path, empty if no path exists
+ */
 vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, const string &end)
 {
     auto nodes = graph.getNodes();
@@ -84,6 +97,13 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
     return path;
 }
 
+/**
+ * @brief Implements A* pathfinding algorithm
+ * @param graph Graph containing nodes and edges
+ * @param start ID of the starting node
+ * @param end ID of the destination node
+ * @return Vector of node IDs representing the shortest path, empty if no path exists
+ */
 vector<string> Algorithms::astar(const Graph &graph, const string &start, const string &end)
 {
     auto nodes = graph.getNodes();
@@ -156,6 +176,13 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
     return path;
 }
 
+/**
+ * @brief Calculates total distance of a given path
+ * @param path Vector of node IDs representing the path
+ * @param graph Graph containing nodes and edges
+ * @return Total distance of the path in kilometers
+ * @throws runtime_error if no valid edge exists between consecutive nodes
+ */
 double Algorithms::totalDistance(const vector<string> &path, const Graph &graph)
 {
     double totalDistance = 0.0;
@@ -189,6 +216,12 @@ double Algorithms::totalDistance(const vector<string> &path, const Graph &graph)
     return totalDistance;
 }
 
+/**
+ * @brief Displays path information including total distance
+ * @param path Vector of node IDs representing the path
+ * @param algorithm Name of the algorithm used to find the path
+ * @param graph Graph containing nodes and edges
+ */
 void Algorithms::displayPath(const vector<string> &path, const string &algorithm, const Graph &graph)
 {
     if (path.empty())

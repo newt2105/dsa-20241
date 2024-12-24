@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "color.h"
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -8,18 +9,34 @@
 
 using namespace std;
 
+/**
+ * @brief Constructor for Graph class
+ */
 Graph::Graph()
 {
     loadFromFile("/home/dihnhuunam/Workspace/dsa-20241/data.txt");
     draw();
 }
 
+/**
+ * @brief Adds a new node to the graph
+ * @param id Node identifier
+ * @param x Latitude coordinate
+ * @param y Longitude coordinate
+ */
 void Graph::addNode(const string &id, double x, double y)
 {
     Node node = {id, x, y};
     nodes.push_back(node);
 }
 
+/**
+ * @brief Adds a new edge to the graph
+ * @param fromId Source node ID
+ * @param toId Destination node ID
+ * @param isOneWay True if edge is one-way, false if bidirectional
+ * @param weight Edge weight (distance)
+ */
 void Graph::addEdge(const string &fromId, const string &toId, bool isOneWay, double weight)
 {
     auto fromNode = find_if(nodes.begin(), nodes.end(),
@@ -43,50 +60,69 @@ void Graph::addEdge(const string &fromId, const string &toId, bool isOneWay, dou
     }
 }
 
+/**
+ * @brief Gets all nodes in the graph
+ * @return Vector of all nodes
+ */
 vector<Node> Graph::getNodes() const
 {
     return nodes;
 }
 
+/**
+ * @brief Gets all edges in the graph
+ * @return Vector of all edges
+ */
 vector<Edge> Graph::getEdges() const
 {
     return edges;
 }
 
+/**
+ * @brief Gets the adjacency list representation of the graph
+ * @return Map of node IDs to their adjacent edges
+ */
 map<string, vector<Edge>> Graph::getAdjacencyList() const
 {
     return adjacencyList;
 }
 
+/**
+ * @brief Displays graph information to console
+ */
 void Graph::displayGraph()
 {
     if (nodes.empty())
     {
-        cout << "Warning: No nodes loaded\n";
+        cout << RED "Warning: No nodes loaded\n" RESET;
         return;
     }
 
-    cout << "Nodes:\n";
+    cout << BOLD BLUE "Nodes:\n" RESET;
     for (const auto &node : nodes)
     {
-        cout << "- " << node.id << " (" << node.x << ", " << node.y << ")\n";
+        cout << CYAN "- " << node.id << " (" << node.x << ", " << node.y << ")\n" RESET;
     }
 
     if (edges.empty())
     {
-        cout << "Warning: No edges loaded\n";
+        cout << RED "Warning: No edges loaded\n" RESET;
         return;
     }
 
-    cout << "\nEdges:\n";
+    cout << BOLD BLUE "\nEdges:\n" RESET;
     for (const auto &edge : edges)
     {
-        cout << edge.from.id << " -> " << edge.to.id
-             << " (Weight: " << edge.weight
-             << ", Direction: " << (edge.direction ? "One-way" : "Two-way") << ")\n";
+        cout << GREEN << edge.from.id << YELLOW " -> " GREEN << edge.to.id
+             << CYAN " (Weight: " << edge.weight
+             << ", Direction: " << (edge.direction ? "One-way" : "Two-way") << ")" RESET << "\n";
     }
 }
 
+/**
+ * @brief Loads graph data from a file
+ * @param filePath Path to the input file
+ */
 void Graph::loadFromFile(const string &filePath)
 {
     ifstream inputFile(filePath);
@@ -145,6 +181,9 @@ void Graph::loadFromFile(const string &filePath)
     inputFile.close();
 }
 
+/**
+ * @brief Generates a visual representation of the graph
+ */
 void Graph::draw()
 {
     const string outputDir = "../../results/";
@@ -183,5 +222,5 @@ void Graph::draw()
     dotFile.close();
 
     string command = "dot -Tpng " + outputDir + "hanoi_map.dot -o " + outputDir + "hanoi_map.png";
-    system(command.c_str());
+    int dot = system(command.c_str());
 }
