@@ -45,8 +45,9 @@ void Application::displayMenu()
     Row row1 = {GREEN "1. Display map information" RESET};
     Row row2 = {GREEN "2. Find path using Dijkstra's algorithm" RESET};
     Row row3 = {GREEN "3. Find path using A* algorithm" RESET};
-    Row row4 = {GREEN "4. Compare both algorithms" RESET};
-    Row row5 = {RED "5. Exit" RESET};
+    Row row4 = {GREEN "4. Find path using DFS algorithm" RESET};
+    Row row5 = {GREEN "5. Compare all algorithms" RESET};
+    Row row6 = {RED "6. Exit" RESET};
 
     table.AddNewRow(header);
     table.AddNewRow(row1);
@@ -54,6 +55,7 @@ void Application::displayMenu()
     table.AddNewRow(row3);
     table.AddNewRow(row4);
     table.AddNewRow(row5);
+    table.AddNewRow(row6);
 
     table.WriteTable(Align::Center);
     cout << CYAN "Enter your choice: " RESET;
@@ -159,6 +161,10 @@ void Application::findPath(const string &algorithm, const string &source, const 
     {
         path = Algorithms::astar(hanoiMap, source, destination);
     }
+    else if (algorithm == "DFS")
+    {
+        path = Algorithms::dfs(hanoiMap, source, destination);
+    }
 
     if (!path.empty())
     {
@@ -220,15 +226,25 @@ void Application::handleChoice(int choice)
 
     case 4:
     {
+        auto [source, destination] = getSourceAndDestinationWithHeader("DFS Algorithm Pathfinding");
+        clearScreen();
+        findPath("DFS", source, destination);
+        break;
+    }
+
+    case 5:
+    {
         auto [source, destination] = getSourceAndDestinationWithHeader("Algorithm Comparison");
         clearScreen();
         findPath("Dijkstra", source, destination);
         cout << "\n";
         findPath("A*", source, destination);
+        cout << "\n";
+        findPath("DFS", source, destination);
         break;
     }
 
-    case 5:
+    case 6:
     {
         ConsoleTable exitTable(1);
         exitTable.AddNewRow({BOLD GREEN "Thank you for using the Hanoi Map Pathfinding System!" RESET});
@@ -239,7 +255,7 @@ void Application::handleChoice(int choice)
     default:
     {
         ConsoleTable errorTable(1);
-        errorTable.AddNewRow({RED "Invalid choice! Please enter a number between 1 and 5." RESET});
+        errorTable.AddNewRow({RED "Invalid choice! Please enter a number between 1 and 6." RESET});
         errorTable.WriteTable(Align::Center);
         break;
     }
