@@ -8,32 +8,6 @@ ConsoleTable::ConsoleTable(unsigned int numberOfColumns) : _numberOfColumns(numb
 {
 }
 
-// Add this helper function to strip ANSI codes for width calculation
-std::string stripAnsiCodes(const std::string &str)
-{
-	std::string result;
-	bool inEscapeSeq = false;
-
-	for (char c : str)
-	{
-		if (c == '\033')
-		{
-			inEscapeSeq = true;
-			continue;
-		}
-		if (inEscapeSeq)
-		{
-			if (c == 'm')
-			{
-				inEscapeSeq = false;
-			}
-			continue;
-		}
-		result += c;
-	}
-	return result;
-}
-
 /**
  * @brief Writes the formatted table to output stream
  * @param align Text alignment in cells
@@ -165,7 +139,7 @@ std::vector<int> ConsoleTable::GetColumnsMaxWidth() const
 	{
 		std::vector<int> width(_rows.size());
 		for (int j = 0; j < _rows.size(); j++)
-			width[j] = stripAnsiCodes(_rows[j][i]).length();
+			width[j] = _rows[j][i].length();
 		columnsWidth.push_back(*std::max_element(width.begin(), width.end()));
 	}
 	return columnsWidth;
