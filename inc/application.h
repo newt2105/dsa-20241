@@ -19,13 +19,13 @@ private:
 
     void clearScreen();
     void waitForEnter();
-    void clearInputBuffer();
     void displayMenu();
-    void displayAvailableLocationsWithHeader(const string &headerText); 
     bool isValidLocation(const string &location);
+    void displayAvailableLocationsWithHeader(const string &headerText); 
     pair<string, string> getSourceAndDestinationWithHeader(const string &headerText); 
     void findPath(const string &algorithm, const string &source, const string &destination);
     void handleChoice(int choice);
+    void addNewLocation();
 };
 
 #endif

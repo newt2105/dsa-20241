@@ -11,8 +11,17 @@
 #include <sstream>
 #include <forward_list>
 
-enum class Align { Left, Right, Center };
-typedef std::forward_list<std::string> Row;
+using namespace std;
+
+const string DATA_FILE_PATH = "/home/dihnhuunam/Workspace/dsa-20241/data.txt";
+
+enum class Align
+{
+	Left,
+	Right,
+	Center
+};
+typedef forward_list<string> Row;
 
 class ConsoleTable
 {
@@ -22,18 +31,18 @@ public:
 	ConsoleTable(unsigned int numberOfColumns);
 
 public:
-	void WriteTable(Align align = Align::Left, std::ostream* stream = &std::cout) const;
-	void AddNewRow(const std::forward_list<std::string>& list);
+	void WriteTable(Align align = Align::Left, ostream *stream = &cout) const;
+	void AddNewRow(const forward_list<string> &list);
 
 private:
-	void GenerateStream(std::stringstream&, Align align, int i, const std::vector<int>& columnsWidth) const;
-	std::string AlignRowToLeftOrRight(Align align, int index, const std::vector<int>&columnsWidth) const;
-	std::string AlignRowToCenter(int index, const std::vector<int>&columnsWidth) const;
-	void WriteBorderToStream(int width, std::stringstream* stream) const;
-	std::vector<int> GetColumnsMaxWidth() const;
+	void GenerateStream(stringstream &, Align align, int i, const vector<int> &columnsWidth) const;
+	string AlignRowToLeftOrRight(Align align, int index, const vector<int> &columnsWidth) const;
+	string AlignRowToCenter(int index, const vector<int> &columnsWidth) const;
+	void WriteBorderToStream(int width, stringstream *stream) const;
+	vector<int> GetColumnsMaxWidth() const;
 
 private:
 	unsigned int _numberOfColumns;
-	std::vector<std::vector<std::string>> _rows;
+	vector<vector<string>> _rows;
 };
 #endif

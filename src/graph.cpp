@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "ultis.h"
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -13,7 +14,7 @@ using namespace std;
  */
 Graph::Graph()
 {
-    loadFromFile("/home/dihnhuunam/Workspace/dsa-20241/data.txt");
+    loadFromFile(DATA_FILE_PATH);
     draw();
 }
 
@@ -135,7 +136,6 @@ void Graph::loadFromFile(const string &filePath)
     string line, section;
     while (getline(inputFile, line))
     {
-        // Bỏ qua dòng trống hoặc dòng chú thích
         if (line.empty() || line[0] == '#')
             continue;
 

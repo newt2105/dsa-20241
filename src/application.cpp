@@ -34,15 +34,6 @@ void Application::waitForEnter()
 }
 
 /**
- * @brief Clears the input buffer
- */
-void Application::clearInputBuffer()
-{
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
-/**
  * @brief Displays the main menu interface
  */
 void Application::displayMenu()
@@ -55,7 +46,8 @@ void Application::displayMenu()
     Row row3 = {"3. Find path using A* algorithm"};
     Row row4 = {"4. Find path using DFS algorithm"};
     Row row5 = {"5. Compare all algorithms"};
-    Row row6 = {"6. Exit"};
+    Row row6 = {"6. Add new location"};
+    Row row7 = {"7. Exit"};
 
     table.AddNewRow(header);
     table.AddNewRow(row1);
@@ -64,6 +56,7 @@ void Application::displayMenu()
     table.AddNewRow(row4);
     table.AddNewRow(row5);
     table.AddNewRow(row6);
+    table.AddNewRow(row7);
 
     table.WriteTable(Align::Center);
     cout << "Enter your choice: ";
@@ -146,6 +139,10 @@ pair<string, string> Application::getSourceAndDestinationWithHeader(const string
     }
 
     return make_pair(source, destination);
+}
+
+void Application::addNewLocation()
+{
 }
 
 /**
@@ -252,6 +249,11 @@ void Application::handleChoice(int choice)
 
     case 6:
     {
+        addNewLocation();
+    }
+
+    case 7:
+    {
         ConsoleTable exitTable(1);
         exitTable.AddNewRow({"Thank you for using the Hanoi Map Pathfinding System!"});
         exitTable.WriteTable(Align::Center);
@@ -261,7 +263,7 @@ void Application::handleChoice(int choice)
     default:
     {
         ConsoleTable errorTable(1);
-        errorTable.AddNewRow({"Invalid choice! Please enter a number between 1 and 6."});
+        errorTable.AddNewRow({"Invalid choice! Please enter a number between 1 and 7."});
         errorTable.WriteTable(Align::Center);
         break;
     }
@@ -295,7 +297,7 @@ void Application::run()
         {
             clearScreen();
             ConsoleTable errorTable(1);
-            errorTable.AddNewRow({"Invalid input! Please enter a number between 1 and 5."});
+            errorTable.AddNewRow({"Invalid input! Please enter a number between 1 and 7."});
             errorTable.WriteTable(Align::Center);
             continue;
         }
