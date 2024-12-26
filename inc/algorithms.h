@@ -6,6 +6,8 @@
 #include <string>
 #include <unordered_map>
 #include <queue>
+#include <unordered_set>  
+#include <unordered_map>
 #include <cmath>
 #include <algorithm>
 #include <iostream>
@@ -19,6 +21,7 @@ public:
     static double calculateDistance(const Node &node1, const Node &node2);
     static vector<string> dijkstra(const Graph &graph, const string &start, const string &end);
     static vector<string> astar(const Graph &graph, const string &start, const string &end);
+    static vector<string> dfs(const Graph &graph, const string &start, const string &end);
     static void displayPath(const vector<string> &path, const string &algorithm, const Graph &graph);
     static double totalDistance(const vector<string> &path, const Graph &graph);
 

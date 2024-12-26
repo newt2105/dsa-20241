@@ -177,6 +177,62 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
 }
 
 /**
+ * @brief Helper function for DFS implementation
+ * @param graph Graph containing nodes and edges
+ * @param current Current node being explored
+ * @param end Target node
+ * @param visited Set of visited nodes
+ * @param path Current path being built
+ * @param finalPath Reference to store the final path if found
+ * @return true if path is found, false otherwise
+ */
+bool dfsHelper(const Graph &graph, const string &current, const string &end,
+               unordered_set<string> &visited, vector<string> &path,
+               vector<string> &finalPath)
+{
+    if (current == end)
+    {
+        finalPath = path;
+        return true;
+    }
+
+    visited.insert(current);
+    auto adjacencyList = graph.getAdjacencyList();
+
+    if (adjacencyList.find(current) != adjacencyList.end())
+    {
+        for (const auto &edge : adjacencyList.at(current))
+        {
+            string next = edge.to.id;
+            if (visited.find(next) == visited.end())
+            {
+                path.push_back(next);
+                if (dfsHelper(graph, next, end, visited, path, finalPath))
+                {
+                    return true;
+                }
+                path.pop_back();
+            }
+        }
+    }
+
+    return false;
+}
+
+vector<string> Algorithms::dfs(const Graph &graph, const string &start, const string &end)
+{
+    unordered_set<string> visited;
+    vector<string> path = {start};
+    vector<string> finalPath;
+
+    if (dfsHelper(graph, start, end, visited, path, finalPath))
+    {
+        return finalPath;
+    }
+    return vector<string>();
+}
+
+/**
  * @brief Calculates total distance of a given path
  * @param path Vector of node IDs representing the path
  * @param graph Graph containing nodes and edges
