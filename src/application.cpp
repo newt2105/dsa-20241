@@ -179,7 +179,6 @@ void Application::addNewLocation()
 
     locationTable.WriteTable(Align::Left);
 
-    // Nhập số lượng kết nối với khả năng thử lại
     int numConnections;
     while (true)
     {
