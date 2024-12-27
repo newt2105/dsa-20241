@@ -1,10 +1,13 @@
 #include "application.h"
+#include "algorithms.h"
 #include "ultis.h"
-#include "color.h"
+#include "graph.h"
 #include <iostream>
 #include <limits>
 #include <algorithm>
 #include <iomanip>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -30,7 +33,7 @@ void Application::clearScreen()
  */
 void Application::waitForEnter()
 {
-    cout << YELLOW "\nPress Enter to return to the main menu..." RESET;
+    cout << "\nPress Enter to return to the main menu...";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
@@ -41,13 +44,14 @@ void Application::displayMenu()
 {
     clearScreen();
     ConsoleTable table(1);
-    Row header = {BOLD BLUE "Ha Noi Path Finding System" RESET};
-    Row row1 = {GREEN "1. Display map information" RESET};
-    Row row2 = {GREEN "2. Find path using Dijkstra's algorithm" RESET};
-    Row row3 = {GREEN "3. Find path using A* algorithm" RESET};
-    Row row4 = {GREEN "4. Find path using DFS algorithm" RESET};
-    Row row5 = {GREEN "5. Compare all algorithms" RESET};
-    Row row6 = {RED "6. Exit" RESET};
+    Row header = {"Ha Noi Path Finding System"};
+    Row row1 = {"1. Display map information"};
+    Row row2 = {"2. Find path using Dijkstra's algorithm"};
+    Row row3 = {"3. Find path using A* algorithm"};
+    Row row4 = {"4. Find path using DFS algorithm"};
+    Row row5 = {"5. Compare all algorithms"};
+    Row row6 = {"6. Add new location"};
+    Row row7 = {"7. Exit"};
 
     table.AddNewRow(header);
     table.AddNewRow(row1);
@@ -56,9 +60,220 @@ void Application::displayMenu()
     table.AddNewRow(row4);
     table.AddNewRow(row5);
     table.AddNewRow(row6);
+    table.AddNewRow(row7);
 
     table.WriteTable(Align::Center);
-    cout << CYAN "Enter your choice: " RESET;
+    cout << "Enter your choice: ";
+}
+
+/**
+ * @brief Calculates the simple Euclidean distance between two points.
+ * @param x1 Latitude of the first point.
+ * @param y1 Longitude of the first point.
+ * @param x2 Latitude of the second point.
+ * @param y2 Longitude of the second point.
+ * @return The Euclidean distance between the two points.
+ */
+double simpleDistance(double x1, double y1, double x2, double y2)
+{
+    return std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
+}
+
+/**
+ * @brief Adds a new location to the map, connects it to another location, and saves the updates.
+ */
+void Application::addNewLocation()
+{
+    clearScreen();
+    ConsoleTable table(1);
+    table.AddNewRow({"Add New Location"});
+    table.WriteTable(Align::Center);
+
+    string id;
+    double x, y;
+
+    cout << "Enter location ID (no spaces): ";
+    getline(cin, id);
+
+    if (id.find(' ') != string::npos)
+    {
+        ConsoleTable errorTable(1);
+        errorTable.AddNewRow({"Error: Location ID cannot contain spaces!"});
+        errorTable.WriteTable(Align::Center);
+        return;
+    }
+
+    if (isValidLocation(id))
+    {
+        ConsoleTable errorTable(1);
+        errorTable.AddNewRow({"Error: Location ID already exists!"});
+        errorTable.WriteTable(Align::Center);
+        return;
+    }
+
+    cout << "Enter latitude (x coordinate): ";
+    string xInput;
+    getline(cin, xInput);
+    try
+    {
+        x = stod(xInput);
+        if (x < -90 || x > 90)
+            throw out_of_range("Latitude must be between -90 and 90");
+    }
+    catch (const exception &e)
+    {
+        ConsoleTable errorTable(1);
+        errorTable.AddNewRow({"Error: Invalid latitude! " + string(e.what())});
+        errorTable.WriteTable(Align::Center);
+        return;
+    }
+
+    cout << "Enter longitude (y coordinate): ";
+    string yInput;
+    getline(cin, yInput);
+    try
+    {
+        y = stod(yInput);
+        if (y < -180 || y > 180)
+            throw out_of_range("Longitude must be between -180 and 180");
+    }
+    catch (const exception &e)
+    {
+        ConsoleTable errorTable(1);
+        errorTable.AddNewRow({"Error: Invalid longitude! " + string(e.what())});
+        errorTable.WriteTable(Align::Center);
+        return;
+    }
+
+    Node newNode = {id, x, y};
+
+    ConsoleTable locationTable(3);
+    locationTable.AddNewRow({"Location ID", "Coordinates", "Distance (km)"});
+
+    vector<Node> nodes = hanoiMap.getNodes();
+    vector<pair<string, double>> distances;
+
+    for (const auto &node : nodes)
+    {
+        double distance = simpleDistance(newNode.x, newNode.y, node.x, node.y);
+        distances.push_back({node.id, distance});
+
+        stringstream coords;
+        coords << fixed << setprecision(6) << "(" << node.x << ", " << node.y << ")";
+
+        stringstream distStr;
+        distStr << fixed << setprecision(2) << distance;
+
+        locationTable.AddNewRow({node.id, coords.str(), distStr.str()});
+    }
+
+    locationTable.WriteTable(Align::Left);
+
+    sort(distances.begin(), distances.end(),
+         [](const pair<string, double> &a, const pair<string, double> &b)
+         {
+             return a.second < b.second;
+         });
+
+    cout << "\nNearest location: " << distances[0].first
+         << " (Distance: " << fixed << setprecision(2) << distances[0].second << " km)\n";
+
+    string connectTo;
+    cout << "\nEnter ID of location to connect to: ";
+    getline(cin, connectTo);
+
+    if (!isValidLocation(connectTo))
+    {
+        ConsoleTable errorTable(1);
+        errorTable.AddNewRow({"Error: Invalid connection location!"});
+        errorTable.WriteTable(Align::Center);
+        return;
+    }
+
+    auto it = find_if(distances.begin(), distances.end(),
+                      [&connectTo](const pair<string, double> &p)
+                      {
+                          return p.first == connectTo;
+                      });
+    double calculatedDistance = it->second;
+
+    cout << "Calculated distance to " << connectTo << ": "
+         << fixed << setprecision(2) << calculatedDistance << " km\n";
+
+    cout << "Use calculated distance? (1 for yes, 0 for no): ";
+    string useCalculatedInput;
+    getline(cin, useCalculatedInput);
+
+    double weight;
+    if (useCalculatedInput == "1")
+    {
+        weight = calculatedDistance;
+    }
+    else
+    {
+        cout << "Enter custom distance (in km): ";
+        string weightInput;
+        getline(cin, weightInput);
+        try
+        {
+            weight = stod(weightInput);
+            if (weight <= 0)
+                throw invalid_argument("Distance must be positive");
+        }
+        catch (const exception &e)
+        {
+            ConsoleTable errorTable(1);
+            errorTable.AddNewRow({"Error: Invalid distance! " + string(e.what())});
+            errorTable.WriteTable(Align::Center);
+            return;
+        }
+    }
+
+    cout << "Is this a one-way connection? (1 for yes, 0 for no): ";
+    string directionInput;
+    getline(cin, directionInput);
+    int direction;
+    try
+    {
+        direction = stoi(directionInput);
+        if (direction != 0 && direction != 1)
+            throw invalid_argument("Invalid direction");
+    }
+    catch (...)
+    {
+        ConsoleTable errorTable(1);
+        errorTable.AddNewRow({"Error: Invalid direction! Must be 0 or 1."});
+        errorTable.WriteTable(Align::Center);
+        return;
+    }
+
+    try
+    {
+        // Add new node and edge
+        hanoiMap.addNode(id, x, y);
+        hanoiMap.addEdge(id, connectTo, direction == 1, weight);
+        if (direction == 0)
+        {
+            hanoiMap.addEdge(connectTo, id, true, weight);
+        }
+
+        // Save to file and redraw
+        hanoiMap.saveToFile();
+        hanoiMap.draw();
+
+        // Reload the graph from file
+        hanoiMap = Graph();
+
+        ConsoleTable successTable(1);
+        successTable.AddNewRow({"Location added successfully!"});
+        successTable.WriteTable(Align::Center);
+    }
+    catch (const exception &e)
+    {
+        ConsoleTable errorTable(1);
+        errorTable.AddNewRow({"Error: Failed to add location! " + string(e.what())});
+        errorTable.WriteTable(Align::Center);
+    }
 }
 
 /**
@@ -68,13 +283,13 @@ void Application::displayMenu()
 void Application::displayAvailableLocationsWithHeader(const string &headerText)
 {
     ConsoleTable table(1);
-    table.AddNewRow({BOLD BLUE + headerText + RESET});
-    table.AddNewRow({BOLD YELLOW "Available Locations" RESET});
+    table.AddNewRow({headerText});
+    table.AddNewRow({"Available Locations"});
 
     vector<Node> nodes = hanoiMap.getNodes();
     for (const auto &node : nodes)
     {
-        table.AddNewRow({CYAN + node.id + RESET});
+        table.AddNewRow({node.id});
     }
 
     table.WriteTable(Align::Center);
@@ -151,7 +366,7 @@ void Application::findPath(const string &algorithm, const string &source, const 
     vector<string> path;
 
     ConsoleTable resultTable(1);
-    resultTable.AddNewRow({BOLD BLUE + algorithm + " Path Results" RESET});
+    resultTable.AddNewRow({algorithm + " Path Results"});
 
     if (algorithm == "Dijkstra")
     {
@@ -171,21 +386,21 @@ void Application::findPath(const string &algorithm, const string &source, const 
         string pathStr;
         for (size_t i = 0; i < path.size(); ++i)
         {
-            pathStr += GREEN + path[i] + RESET;
+            pathStr += path[i];
             if (i < path.size() - 1)
-                pathStr += YELLOW " -> " RESET;
+                pathStr += " -> ";
         }
 
         double distance = Algorithms::totalDistance(path, hanoiMap);
         stringstream distanceStr;
-        distanceStr << fixed << setprecision(1) << CYAN << distance << " km" << RESET;
+        distanceStr << fixed << setprecision(1) << distance << " km";
 
         resultTable.AddNewRow({"Path: " + pathStr});
         resultTable.AddNewRow({"Total Distance: " + distanceStr.str()});
     }
     else
     {
-        resultTable.AddNewRow({RED "No valid path found!" RESET});
+        resultTable.AddNewRow({"No valid path found!"});
     }
 
     resultTable.WriteTable(Align::Left);
@@ -203,7 +418,7 @@ void Application::handleChoice(int choice)
     {
     case 1:
     {
-        cout << BOLD BLUE "Map Information\n" RESET;
+        cout << "Map Information\n";
         hanoiMap.displayGraph();
         break;
     }
@@ -237,17 +452,21 @@ void Application::handleChoice(int choice)
         auto [source, destination] = getSourceAndDestinationWithHeader("Algorithm Comparison");
         clearScreen();
         findPath("Dijkstra", source, destination);
-        cout << "\n";
         findPath("A*", source, destination);
-        cout << "\n";
         findPath("DFS", source, destination);
         break;
     }
 
     case 6:
     {
+        addNewLocation();
+        break;
+    }
+
+    case 7:
+    {
         ConsoleTable exitTable(1);
-        exitTable.AddNewRow({BOLD GREEN "Thank you for using the Hanoi Map Pathfinding System!" RESET});
+        exitTable.AddNewRow({"Thank you for using the Hanoi Map Pathfinding System!"});
         exitTable.WriteTable(Align::Center);
         exit(0);
     }
@@ -255,7 +474,7 @@ void Application::handleChoice(int choice)
     default:
     {
         ConsoleTable errorTable(1);
-        errorTable.AddNewRow({RED "Invalid choice! Please enter a number between 1 and 6." RESET});
+        errorTable.AddNewRow({"Invalid choice! Please enter a number between 1 and 7."});
         errorTable.WriteTable(Align::Center);
         break;
     }
@@ -289,7 +508,7 @@ void Application::run()
         {
             clearScreen();
             ConsoleTable errorTable(1);
-            errorTable.AddNewRow({"Invalid input! Please enter a number between 1 and 5."});
+            errorTable.AddNewRow({"Invalid input! Please enter a number between 1 and 7."});
             errorTable.WriteTable(Align::Center);
             continue;
         }
