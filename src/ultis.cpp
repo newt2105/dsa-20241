@@ -1,5 +1,7 @@
 #include "ultis.h"
 
+const string DATA_FILE_PATH = "/home/dihnhuunam/Workspace/dsa-20241/data.txt";
+
 /**
  * @brief Constructor for ConsoleTable class
  * @param numberOfColumns Number of columns in the table

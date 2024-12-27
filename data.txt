@@ -1,14 +1,14 @@
 Nodes
-HoanKiem 21.0285 105.8542
-WestLake 21.0587 105.8229
-LongBien 21.0437 105.8625
-CauGiay 21.0359 105.7929
-ThanhXuan 21.0071 105.8135
-HaDong 20.9718 105.7852
-DongDa 21.0150 105.8355
-BaDinh 21.0338 105.8120
-GiaLam 21.0201 105.8922
-HoangMai 20.9882 105.8497
+HoanKiem 21.0285 105.854
+WestLake 21.0587 105.823
+LongBien 21.0437 105.862
+CauGiay 21.0359 105.793
+ThanhXuan 21.0071 105.814
+HaDong 20.9718 105.785
+DongDa 21.015 105.835
+BaDinh 21.0338 105.812
+GiaLam 21.0201 105.892
+HoangMai 20.9882 105.85
 
 Edges
 HoanKiem WestLake 5.2 1
@@ -16,9 +16,9 @@ WestLake CauGiay 4.1 1
 LongBien HoanKiem 3.8 1
 CauGiay ThanhXuan 4.5 0
 ThanhXuan HaDong 6.3 1
-HoanKiem ThanhXuan 5.0 0
+HoanKiem ThanhXuan 5 0
 LongBien WestLake 4.7 0
-DongDa HoanKiem 2.0 0
+DongDa HoanKiem 2 0
 BaDinh DongDa 3.1 1
 BaDinh CauGiay 2.8 1
 GiaLam LongBien 3.9 1

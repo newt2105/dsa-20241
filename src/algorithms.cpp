@@ -219,6 +219,13 @@ bool dfsHelper(const Graph &graph, const string &current, const string &end,
     return false;
 }
 
+/**
+ * @brief Implements Depth-First Search (DFS) algorithm.
+ * @param graph Graph containing nodes and edges.
+ * @param start ID of the starting node.
+ * @param end ID of the destination node.
+ * @return Vector of node IDs representing the path, or empty if no path exists.
+ */
 vector<string> Algorithms::dfs(const Graph &graph, const string &start, const string &end)
 {
     unordered_set<string> visited;
