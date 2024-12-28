@@ -2,15 +2,8 @@
 #define ALGORITHMS_H
 
 #include "graph.h"
-#include <iostream>
-#include <iomanip>
-#include <cmath>
 #include <vector>
 #include <string>
-#include <queue>
-#include <unordered_map>
-#include <unordered_set>
-#include <algorithm>
 
 using namespace std;
 

@@ -1,4 +1,12 @@
 #include "algorithms.h"
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <limits>
+#include <algorithm>
+#include <queue>
+#include <unordered_map>
+#include <unordered_set>
 
 /**
  * @brief Calculates the great-circle distance between two geographical points using the Haversine formula
@@ -71,7 +79,7 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
             }
         }
     }
-    
+
     cout << "Distances from " << start << " to all nodes:" << endl;
     for (const auto &pair : distances)
     {
@@ -170,7 +178,7 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
     {
         if (previous.find(current) == previous.end())
         {
-            return {}; // No path found
+            return {}; 
         }
         path.push_back(current);
     }
