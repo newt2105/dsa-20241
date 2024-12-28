@@ -113,7 +113,7 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
 
     auto endTime = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
-    lastExecutionTime = ExecutionTime(duration.count() / 1000.0, "Dijkstra*");
+    lastExecutionTime = ExecutionTime(duration.count() / 1000.0, "Dijkstra");
 
     return path;
 }
