@@ -7,6 +7,7 @@
 #include <queue>
 #include <unordered_map>
 #include <unordered_set>
+#include <chrono>
 
 /**
  * @brief Calculates the great-circle distance between two geographical points using the Haversine formula
@@ -28,6 +29,10 @@ double Algorithms::calculateDistance(const Node &node1, const Node &node2)
  */
 vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, const string &end)
 {
+    using namespace std::chrono;
+
+    // Bắt đầu đếm thời gian
+    auto startTime = high_resolution_clock::now();
     auto nodes = graph.getNodes();
     auto adjacencyList = graph.getAdjacencyList();
 
@@ -92,6 +97,12 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
     }
     path.push_back(start);
     reverse(path.begin(), path.end());
+    // Kết thúc đếm thời gian
+    auto endTime = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(endTime - startTime);
+
+    // In thời gian chạy
+    cout << "Time for Dijkstra: " << duration.count() << " microseconds" << endl;
 
     return path;
 }
@@ -105,6 +116,11 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
  */
 vector<string> Algorithms::astar(const Graph &graph, const string &start, const string &end)
 {
+    using namespace std::chrono;
+
+    // Bắt đầu đếm thời gian
+    auto startTime = high_resolution_clock::now();
+
     auto nodes = graph.getNodes();
     auto adjacencyList = graph.getAdjacencyList();
 
@@ -171,6 +187,12 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
     }
     path.push_back(start);
     reverse(path.begin(), path.end());
+    // Kết thúc đếm thời gian
+    auto endTime = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(endTime - startTime);
+
+    // In thời gian chạy
+    cout << "Time for A*: " << duration.count() << " microseconds" << endl;
 
     return path;
 }
@@ -227,15 +249,25 @@ bool dfsHelper(const Graph &graph, const string &current, const string &end,
  */
 vector<string> Algorithms::dfs(const Graph &graph, const string &start, const string &end)
 {
+    using namespace std::chrono;
+
+    // Bắt đầu đếm thời gian
+    auto startTime = high_resolution_clock::now();
+
     unordered_set<string> visited;
     vector<string> path = {start};
     vector<string> finalPath;
 
-    if (dfsHelper(graph, start, end, visited, path, finalPath))
-    {
-        return finalPath;
-    }
-    return vector<string>();
+    bool found = dfsHelper(graph, start, end, visited, path, finalPath);
+
+    // Kết thúc đếm thời gian
+    auto endTime = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(endTime - startTime);
+
+    // In thời gian chạy
+    cout << "Time for dfs: " << duration.count() << " microseconds" << endl;
+
+    return found ? finalPath : vector<string>();
 }
 
 /**
