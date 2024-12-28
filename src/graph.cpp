@@ -1,12 +1,11 @@
 #include "graph.h"
 #include "ultis.h"
-#include <algorithm>
 #include <iostream>
+#include <algorithm>
+#include <filesystem>
 #include <fstream>
 #include <sstream>
-#include <cmath>
 #include <set>
-#include <filesystem>
 
 using namespace std;
 
@@ -230,10 +229,10 @@ void Graph::loadFromFile(const string &filePath)
  */
 void Graph::saveToFile() const
 {
-    std::ofstream outFile(DATA_FILE_PATH);
+    ofstream outFile(DATA_FILE_PATH);
     if (!outFile.is_open())
     {
-        std::cerr << "Error: Unable to open file for writing: " << DATA_FILE_PATH << std::endl;
+        cerr << "Error: Unable to open file for writing: " << DATA_FILE_PATH << endl;
         return;
     }
 
@@ -245,14 +244,14 @@ void Graph::saveToFile() const
 
     outFile << "\nEdges\n";
 
-    std::set<std::pair<std::string, std::string>> processedEdges;
+    set<pair<string, string>> processedEdges;
 
     for (const auto &edge : edges)
     {
-        std::string fromId = edge.from.id;
-        std::string toId = edge.to.id;
+        string fromId = edge.from.id;
+        string toId = edge.to.id;
 
-        auto edgeKey = std::make_pair(std::min(fromId, toId), std::max(fromId, toId));
+        auto edgeKey = make_pair(min(fromId, toId), max(fromId, toId));
 
         if (processedEdges.count(edgeKey) > 0)
             continue;
