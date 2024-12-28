@@ -68,19 +68,6 @@ void Application::displayMenu()
 }
 
 /**
- * @brief Calculates the simple Euclidean distance between two points.
- * @param x1 Latitude of the first point.
- * @param y1 Longitude of the first point.
- * @param x2 Latitude of the second point.
- * @param y2 Longitude of the second point.
- * @return The Euclidean distance between the two points.
- */
-double simpleDistance(double x1, double y1, double x2, double y2)
-{
-    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
-}
-
-/**
  * @brief Adds a new location to the map, connects it to another location, and saves the updates.
  */
 void Application::addNewLocation()
@@ -166,7 +153,7 @@ void Application::addNewLocation()
 
     for (const auto &node : nodes)
     {
-        double distance = simpleDistance(newNode.x, newNode.y, node.x, node.y);
+        double distance = Algorithms::calculateDistance(newNode, node);
         distances.push_back({node.id, distance});
 
         stringstream coords;
