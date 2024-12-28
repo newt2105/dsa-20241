@@ -8,19 +8,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
-/**
- * @brief Initializes the static member `lastExecutionTime` to default values.
- *        This stores the execution time and algorithm name of the last executed algorithm.
- */
-Algorithms::ExecutionTime Algorithms::lastExecutionTime(0.0, "");
+double Algorithms::lastExecutionTime = 0.0;
 
-/**
- * @brief Retrieves the execution time of the last executed algorithm.
- * @return An `ExecutionTime` structure containing:
- *         - `time`: The execution time in milliseconds.
- *         - `algorithm`: The name of the last executed algorithm.
- */
-Algorithms::ExecutionTime Algorithms::getLastExecutionTime()
+double Algorithms::getLastExecutionTime()
 {
     return lastExecutionTime;
 }
@@ -113,7 +103,7 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
 
     auto endTime = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
-    lastExecutionTime = ExecutionTime(duration.count() / 1000.0, "Dijkstra");
+    lastExecutionTime = duration.count() / 1000.0;
 
     return path;
 }
@@ -197,7 +187,7 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
 
     auto endTime = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
-    lastExecutionTime = ExecutionTime(duration.count() / 1000.0, "A*");
+    lastExecutionTime = duration.count() / 1000.0;
 
     return path;
 }
@@ -265,7 +255,7 @@ vector<string> Algorithms::dfs(const Graph &graph, const string &start, const st
     }
     auto endTime = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
-    lastExecutionTime = ExecutionTime(duration.count() / 1000.0, "DFS");
+    lastExecutionTime = duration.count() / 1000.0;
 
     return vector<string>();
 }

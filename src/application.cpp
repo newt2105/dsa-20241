@@ -392,9 +392,9 @@ void Application::findPath(const string &algorithm, const string &source, const 
         stringstream distanceStr;
         distanceStr << fixed << setprecision(1) << distance << " km";
 
-        Algorithms::ExecutionTime execTime = Algorithms::getLastExecutionTime();
+        double execTime = Algorithms::getLastExecutionTime();
         stringstream timeStr;
-        timeStr << fixed << setprecision(2) << execTime.time << " ms";
+        timeStr << fixed << setprecision(2) << execTime << " ms";
 
         resultTable.AddNewRow({"Path: " + pathStr});
         resultTable.AddNewRow({"Total Distance: " + distanceStr.str()});
@@ -404,9 +404,9 @@ void Application::findPath(const string &algorithm, const string &source, const 
     {
         resultTable.AddNewRow({"No valid path found!"});
 
-        Algorithms::ExecutionTime execTime = Algorithms::getLastExecutionTime();
+        double execTime = Algorithms::getLastExecutionTime();
         stringstream timeStr;
-        timeStr << fixed << setprecision(2) << execTime.time << " ms";
+        timeStr << fixed << setprecision(2) << execTime << " ms";
         resultTable.AddNewRow({"Execution Time: " + timeStr.str()});
     }
 

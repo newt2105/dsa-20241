@@ -59,26 +59,10 @@ public:
     static double totalDistance(const vector<string> &path, const Graph &graph);
 
     /**
-     * @brief Structure to store algorithm execution time information
-     */
-    struct ExecutionTime
-    {
-        double time;
-        string algorithm;
-
-        /**
-         * @brief Constructor for ExecutionTime
-         * @param t Time in milliseconds
-         * @param alg Algorithm name
-         */
-        ExecutionTime(double t, string alg) : time(t), algorithm(alg) {}
-    };
-
-    /**
      * @brief Gets the execution time of the last run algorithm
-     * @return ExecutionTime structure containing timing information
+     * @return execution time
      */
-    static Algorithms::ExecutionTime getLastExecutionTime();
+    static double getLastExecutionTime();
 
 private:
     /**
@@ -92,7 +76,7 @@ private:
         }
     };
 
-    static ExecutionTime lastExecutionTime;
+    static double lastExecutionTime;
 };
 
 #endif
