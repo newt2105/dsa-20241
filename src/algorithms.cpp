@@ -16,17 +16,7 @@
  */
 double Algorithms::calculateDistance(const Node &node1, const Node &node2)
 {
-    const double R = 6371.0;
-    double lat1 = node1.x * M_PI / 180.0;
-    double lat2 = node2.x * M_PI / 180.0;
-    double dLat = (node2.x - node1.x) * M_PI / 180.0;
-    double dLon = (node2.y - node1.y) * M_PI / 180.0;
-
-    double a = sin(dLat / 2) * sin(dLat / 2) +
-               cos(lat1) * cos(lat2) *
-                   sin(dLon / 2) * sin(dLon / 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    return R * c;
+    return sqrt((node2.x - node1.x) * (node2.x - node1.x) + (node2.y - node1.y) * (node2.y - node1.y));
 }
 
 /**
