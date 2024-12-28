@@ -60,9 +60,6 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
         auto [currentDistance, current] = pq.top();
         pq.pop();
 
-        if (current == end)
-            break;
-
         if (adjacencyList.find(current) != adjacencyList.end())
         {
             for (const auto &edge : adjacencyList.at(current))
@@ -178,7 +175,7 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
     {
         if (previous.find(current) == previous.end())
         {
-            return {}; 
+            return {};
         }
         path.push_back(current);
     }
