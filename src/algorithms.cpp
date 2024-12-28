@@ -1,14 +1,4 @@
 #include "algorithms.h"
-#include <vector>
-#include <string>
-#include <cmath>
-#include <unordered_map>
-#include <queue>
-#include <algorithm>
-#include <iostream>
-#include <iomanip>
-
-using namespace std;
 
 /**
  * @brief Calculates the great-circle distance between two geographical points using the Haversine formula

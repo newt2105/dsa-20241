@@ -2,15 +2,15 @@
 #define ALGORITHMS_H
 
 #include "graph.h"
-#include <vector>
-#include <string>
-#include <unordered_map>
-#include <queue>
-#include <unordered_set>
-#include <cmath>
-#include <algorithm>
 #include <iostream>
 #include <iomanip>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <queue>
+#include <unordered_map>
+#include <unordered_set>
+#include <algorithm>
 
 using namespace std;
 
@@ -22,10 +22,10 @@ class Algorithms
 {
 public:
     /**
-     * @brief Calculates the Euclidean distance between two nodes.
-     * @param node1 The first node.
-     * @param node2 The second node.
-     * @return The distance between node1 and node2.
+     * @brief Calculates the great-circle distance between two geographical points using the Haversine formula
+     * @param node1 First geographical point (latitude/longitude)
+     * @param node2 Second geographical point (latitude/longitude)
+     * @return Distance in kilometers between the two points
      */
     static double calculateDistance(const Node &node1, const Node &node2);
 
