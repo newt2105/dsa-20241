@@ -81,6 +81,20 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
             }
         }
     }
+    
+    cout << "Distances from " << start << " to all nodes:" << endl;
+    for (const auto &pair : distances)
+    {
+        cout << "To " << pair.first << ": ";
+        if (pair.second == numeric_limits<double>::infinity())
+        {
+            cout << "Infinity (unreachable)" << endl;
+        }
+        else
+        {
+            cout << pair.second << endl;
+        }
+    }
 
     vector<string> path;
     for (string current = end; current != start; current = previous[current])
