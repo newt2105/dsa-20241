@@ -3,7 +3,6 @@
 
 #include "graph.h"
 #include <string>
-#include <vector>
 
 /**
  * @class Application
@@ -34,21 +33,21 @@ private:
      * Displays a list of available locations with a custom header.
      * @param headerText Header to display above the list of locations.
      */
-    void displayAvailableLocationsWithHeader(const std::string &headerText);
+    void displayAvailableLocationsWithHeader(const string &headerText);
 
     /**
      * Checks if a given location is valid.
      * @param location The location ID to validate.
      * @return True if the location exists in the graph, false otherwise.
      */
-    bool isValidLocation(const std::string &location);
+    bool isValidLocation(const string &location);
 
     /**
      * Gets source and destination locations from the user with a header message.
      * @param headerText Header to display during input.
      * @return A pair of source and destination location IDs.
      */
-    std::pair<std::string, std::string> getSourceAndDestinationWithHeader(const std::string &headerText);
+    pair<string, string> getSourceAndDestinationWithHeader(const string &headerText);
 
     /**
      * Finds and displays a path between two locations using the specified algorithm.
@@ -56,7 +55,7 @@ private:
      * @param source The source location ID.
      * @param destination The destination location ID.
      */
-    void findPath(const std::string &algorithm, const std::string &source, const std::string &destination);
+    void findPath(const string &algorithm, const string &source, const string &destination);
 
     /**
      * Handles a menu choice selected by the user.

@@ -3,11 +3,12 @@
 #include "ultis.h"
 #include "graph.h"
 #include <iostream>
-#include <limits>
-#include <algorithm>
 #include <iomanip>
+#include <limits>
 #include <fstream>
 #include <sstream>
+#include <cmath>
+#include <algorithm>
 
 using namespace std;
 
@@ -76,7 +77,7 @@ void Application::displayMenu()
  */
 double simpleDistance(double x1, double y1, double x2, double y2)
 {
-    return std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
+    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 }
 
 /**
