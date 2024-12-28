@@ -22,7 +22,7 @@ Application::Application() : firstRun(true)
         // Initialize the map and other resources
         hanoiMap = Graph();
     }
-    catch (const std::exception &e)
+    catch (const exception &e)
     {
         cerr << "Failed to initialize application: " << e.what() << endl;
         exit(1);
@@ -46,7 +46,7 @@ void Application::clearScreen()
         }
 #endif
     }
-    catch (const std::exception &e)
+    catch (const exception &e)
     {
         cerr << "Error clearing screen: " << e.what() << endl;
     }
@@ -91,7 +91,7 @@ void Application::displayMenu()
         table.WriteTable(Align::Center);
         cout << "Enter your choice: ";
     }
-    catch (const std::exception &e)
+    catch (const exception &e)
     {
         cerr << "Error displaying menu: " << e.what() << endl;
     }
@@ -111,7 +111,7 @@ double simpleDistance(double x1, double y1, double x2, double y2)
     {
         return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
     }
-    catch (const std::exception &e)
+    catch (const exception &e)
     {
         cerr << "Error calculating distance: " << e.what() << endl;
         return -1.0;
