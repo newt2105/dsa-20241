@@ -9,6 +9,23 @@
 #include <unordered_set>
 
 /**
+ * @brief Initializes the static member `lastExecutionTime` to default values.
+ *        This stores the execution time and algorithm name of the last executed algorithm.
+ */
+Algorithms::ExecutionTime Algorithms::lastExecutionTime(0.0, "");
+
+/**
+ * @brief Retrieves the execution time of the last executed algorithm.
+ * @return An `ExecutionTime` structure containing:
+ *         - `time`: The execution time in milliseconds.
+ *         - `algorithm`: The name of the last executed algorithm.
+ */
+Algorithms::ExecutionTime Algorithms::getLastExecutionTime()
+{
+    return lastExecutionTime;
+}
+
+/**
  * @brief Calculates the great-circle distance between two geographical points using the Haversine formula
  * @param node1 First geographical point (latitude/longitude)
  * @param node2 Second geographical point (latitude/longitude)
@@ -28,6 +45,7 @@ double Algorithms::calculateDistance(const Node &node1, const Node &node2)
  */
 vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, const string &end)
 {
+    auto startTime = chrono::high_resolution_clock::now();
     auto nodes = graph.getNodes();
     auto adjacencyList = graph.getAdjacencyList();
 
@@ -93,6 +111,10 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
     path.push_back(start);
     reverse(path.begin(), path.end());
 
+    auto endTime = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
+    lastExecutionTime = ExecutionTime(duration.count() / 1000.0, "A*");
+
     return path;
 }
 
@@ -105,6 +127,7 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
  */
 vector<string> Algorithms::astar(const Graph &graph, const string &start, const string &end)
 {
+    auto startTime = chrono::high_resolution_clock::now();
     auto nodes = graph.getNodes();
     auto adjacencyList = graph.getAdjacencyList();
 
@@ -172,6 +195,10 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
     path.push_back(start);
     reverse(path.begin(), path.end());
 
+    auto endTime = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
+    lastExecutionTime = ExecutionTime(duration.count() / 1000.0, "A*");
+
     return path;
 }
 
@@ -227,6 +254,7 @@ bool dfsHelper(const Graph &graph, const string &current, const string &end,
  */
 vector<string> Algorithms::dfs(const Graph &graph, const string &start, const string &end)
 {
+    auto startTime = chrono::high_resolution_clock::now();
     unordered_set<string> visited;
     vector<string> path = {start};
     vector<string> finalPath;
@@ -235,6 +263,10 @@ vector<string> Algorithms::dfs(const Graph &graph, const string &start, const st
     {
         return finalPath;
     }
+    auto endTime = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
+    lastExecutionTime = ExecutionTime(duration.count() / 1000.0, "DFS");
+
     return vector<string>();
 }
 
@@ -276,37 +308,4 @@ double Algorithms::totalDistance(const vector<string> &path, const Graph &graph)
     }
 
     return totalDistance;
-}
-
-/**
- * @brief Displays path information including total distance
- * @param path Vector of node IDs representing the path
- * @param algorithm Name of the algorithm used to find the path
- * @param graph Graph containing nodes and edges
- */
-void Algorithms::displayPath(const vector<string> &path, const string &algorithm, const Graph &graph)
-{
-    if (path.empty())
-    {
-        cout << algorithm << " found no valid path!" << endl;
-        return;
-    }
-
-    try
-    {
-        double totalDist = totalDistance(path, graph);
-
-        cout << algorithm << " path: ";
-        for (size_t i = 0; i < path.size(); ++i)
-        {
-            cout << path[i];
-            if (i < path.size() - 1)
-                cout << " -> ";
-        }
-        cout << "\nTotal distance: " << fixed << setprecision(1) << totalDist << " km" << endl;
-    }
-    catch (const exception &e)
-    {
-        cout << algorithm << " error: " << e.what() << endl;
-    }
 }

@@ -4,6 +4,7 @@
 #include "graph.h"
 #include <vector>
 #include <string>
+#include <chrono>
 
 using namespace std;
 
@@ -50,20 +51,34 @@ public:
     static vector<string> dfs(const Graph &graph, const string &start, const string &end);
 
     /**
-     * @brief Displays the path and its details.
-     * @param path The path to display as a vector of node IDs.
-     * @param algorithm The algorithm used to find the path.
-     * @param graph The graph containing the path.
-     */
-    static void displayPath(const vector<string> &path, const string &algorithm, const Graph &graph);
-
-    /**
      * @brief Calculates the total distance of a path.
      * @param path The path as a vector of node IDs.
      * @param graph The graph containing the path.
      * @return The total distance of the path.
      */
     static double totalDistance(const vector<string> &path, const Graph &graph);
+
+    /**
+     * @brief Structure to store algorithm execution time information
+     */
+    struct ExecutionTime
+    {
+        double time;
+        string algorithm;
+
+        /**
+         * @brief Constructor for ExecutionTime
+         * @param t Time in milliseconds
+         * @param alg Algorithm name
+         */
+        ExecutionTime(double t, string alg) : time(t), algorithm(alg) {}
+    };
+
+    /**
+     * @brief Gets the execution time of the last run algorithm
+     * @return ExecutionTime structure containing timing information
+     */
+    static Algorithms::ExecutionTime getLastExecutionTime();
 
 private:
     /**
@@ -76,6 +91,8 @@ private:
             return p1.second > p2.second;
         }
     };
+
+    static ExecutionTime lastExecutionTime;
 };
 
 #endif
