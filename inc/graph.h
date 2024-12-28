@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 
+using namespace std;
+
 /**
  * @struct Node
  * @brief Represents a location on the graph with an ID and coordinates.
@@ -16,7 +18,7 @@
  */
 struct Node
 {
-    std::string id;
+    string id;
     double x;
     double y;
 };
@@ -58,9 +60,9 @@ struct Edge
 class Graph
 {
 private:
-    std::vector<Node> nodes;
-    std::vector<Edge> edges;
-    std::map<std::string, std::vector<Edge>> adjacencyList;
+    vector<Node> nodes;
+    vector<Edge> edges;
+    map<string, vector<Edge>> adjacencyList;
 
 public:
     /**
@@ -74,7 +76,7 @@ public:
      * @param x Latitude (x-coordinate) of the node.
      * @param y Longitude (y-coordinate) of the node.
      */
-    void addNode(const std::string &id, double x, double y);
+    void addNode(const string &id, double x, double y);
 
     /**
      * @brief Adds an edge to the graph.
@@ -83,25 +85,25 @@ public:
      * @param isOneWay Specifies if the edge is one-way (true) or two-way (false).
      * @param weight Weight (e.g., distance) of the edge.
      */
-    void addEdge(const std::string &fromId, const std::string &toId, bool isOneWay, double weight);
+    void addEdge(const string &fromId, const string &toId, bool isOneWay, double weight);
 
     /**
      * @brief Retrieves all nodes in the graph.
      * @return A vector containing all nodes.
      */
-    std::vector<Node> getNodes() const;
+    vector<Node> getNodes() const;
 
     /**
      * @brief Retrieves all edges in the graph.
      * @return A vector containing all edges.
      */
-    std::vector<Edge> getEdges() const;
+    vector<Edge> getEdges() const;
 
     /**
      * @brief Retrieves the adjacency list of the graph.
      * @return A map representing the adjacency list.
      */
-    std::map<std::string, std::vector<Edge>> getAdjacencyList() const;
+    map<string, vector<Edge>> getAdjacencyList() const;
 
     /**
      * @brief Displays the graph in a human-readable format.
@@ -117,7 +119,7 @@ public:
      * @brief Loads graph data from a file.
      * @param filePath Path to the file containing the graph data.
      */
-    void loadFromFile(const std::string &filePath);
+    void loadFromFile(const string &filePath);
 
     /**
      * @brief Saves the current graph data to a file.
