@@ -62,8 +62,8 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
         auto [currentDistance, current] = pq.top();
         pq.pop();
 
-        if (current == end)
-            break;
+        // if (current == end)
+        //     break;
 
         if (adjacencyList.find(current) != adjacencyList.end())
         {
