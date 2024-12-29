@@ -44,7 +44,7 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
     // Initialize distances to all nodes as infinity and the start node's distance to 0
     unordered_map<string, double> distances;
     unordered_map<string, string> previous;                                           // To store the previous node for path reconstruction
-    priority_queue<pair<double, string>, vector<pair<double, string>>, greater<>> pq; // Min-heap for selecting the closest node
+    priority_queue<pair<double, string>, vector<pair<double, string>>, greater<>> pq; // Min-heap for selecting the closest node {weight, id}
 
     for (const auto &node : nodes)
     {
@@ -139,7 +139,7 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
     while (!openSet.empty())
     {
         // Get the node with the lowest estimated cost
-        auto [currentFScore, current] = openSet.top();
+        auto [currentfScore, current] = openSet.top();
         openSet.pop();
 
         if (current == end) // If we reached the target, stop
