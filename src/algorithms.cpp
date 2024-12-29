@@ -16,7 +16,7 @@ double Algorithms::getLastExecutionTime()
 }
 
 /**
- * @brief Calculates the great-circle distance between two geographical points using the Haversine formula
+ * @brief Calculates the great-circle distance between two geographical points using the Euclidean formula
  * @param node1 First geographical point (latitude/longitude)
  * @param node2 Second geographical point (latitude/longitude)
  * @return Distance in kilometers between the two points
@@ -36,59 +36,49 @@ double Algorithms::calculateDistance(const Node &node1, const Node &node2)
 vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, const string &end)
 {
     auto startTime = chrono::high_resolution_clock::now();
+
+    // Retrieve nodes and adjacency list from the graph
     auto nodes = graph.getNodes();
     auto adjacencyList = graph.getAdjacencyList();
 
+    // Initialize distances to all nodes as infinity and the start node's distance to 0
     unordered_map<string, double> distances;
-    unordered_map<string, string> previous;
-    priority_queue<pair<double, string>,
-                   vector<pair<double, string>>,
-                   greater<>>
-        pq;
+    unordered_map<string, string> previous;                                           // To store the previous node for path reconstruction
+    priority_queue<pair<double, string>, vector<pair<double, string>>, greater<>> pq; // Min-heap for selecting the closest node
 
     for (const auto &node : nodes)
     {
         distances[node.id] = numeric_limits<double>::infinity();
     }
     distances[start] = 0;
-    pq.emplace(0, start);
+    pq.emplace(0, start); // Push the start node with a distance of 0
 
     while (!pq.empty())
     {
+        // Get the node with the smallest distance
         auto [currentDistance, current] = pq.top();
         pq.pop();
 
+        // Iterate over neighbors of the current node
         if (adjacencyList.find(current) != adjacencyList.end())
         {
             for (const auto &edge : adjacencyList.at(current))
             {
                 string next = edge.to.id;
-                double newDist = distances[current] + edge.weight;
+                double newDist = distances[current] + edge.weight; // Calculate new distance
 
+                // If a shorter path is found, update distances and priority queue
                 if (newDist < distances[next])
                 {
                     distances[next] = newDist;
-                    previous[next] = current;
+                    previous[next] = current; // Update previous node for path reconstruction
                     pq.emplace(newDist, next);
                 }
             }
         }
     }
 
-    cout << "Distances from " << start << " to all nodes:" << endl;
-    for (const auto &pair : distances)
-    {
-        cout << "To " << pair.first << ": ";
-        if (pair.second == numeric_limits<double>::infinity())
-        {
-            cout << "Infinity (unreachable)" << endl;
-        }
-        else
-        {
-            cout << pair.second << endl;
-        }
-    }
-
+    // Path reconstruction
     vector<string> path;
     for (string current = end; current != start; current = previous[current])
     {
@@ -99,11 +89,11 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
         path.push_back(current);
     }
     path.push_back(start);
-    reverse(path.begin(), path.end());
+    reverse(path.begin(), path.end()); // Reverse the path to get it in the correct order
 
     auto endTime = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
-    lastExecutionTime = duration.count() / 1000.0;
+    lastExecutionTime = duration.count() / 1000.0; // Record execution time
 
     return path;
 }
@@ -118,6 +108,7 @@ vector<string> Algorithms::dijkstra(const Graph &graph, const string &start, con
 vector<string> Algorithms::astar(const Graph &graph, const string &start, const string &end)
 {
     auto startTime = chrono::high_resolution_clock::now();
+
     auto nodes = graph.getNodes();
     auto adjacencyList = graph.getAdjacencyList();
 
@@ -130,12 +121,10 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
             endNode = node;
     }
 
+    // Initialize gScore (cost from start) and fScore (estimated total cost) for all nodes
     unordered_map<string, double> gScore, fScore;
     unordered_map<string, string> previous;
-    priority_queue<pair<double, string>,
-                   vector<pair<double, string>>,
-                   greater<>>
-        openSet;
+    priority_queue<pair<double, string>, vector<pair<double, string>>, greater<>> openSet;
 
     for (const auto &node : nodes)
     {
@@ -144,41 +133,45 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
     }
 
     gScore[start] = 0;
-    fScore[start] = calculateDistance(startNode, endNode);
-    openSet.emplace(fScore[start], start);
+    fScore[start] = calculateDistance(startNode, endNode); // Heuristic: straight-line distance to the target
+    openSet.emplace(fScore[start], start);                 // Push the start node
 
     while (!openSet.empty())
     {
+        // Get the node with the lowest estimated cost
         auto [currentFScore, current] = openSet.top();
         openSet.pop();
 
-        if (current == end)
+        if (current == end) // If we reached the target, stop
             break;
 
+        // Iterate over neighbors of the current node
         if (adjacencyList.find(current) != adjacencyList.end())
         {
             for (const auto &edge : adjacencyList.at(current))
             {
                 string next = edge.to.id;
-                double tentativeGScore = gScore[current] + edge.weight;
+                double tentativeGScore = gScore[current] + edge.weight; // Calculate cost to neighbor
 
+                // If this path is better, update the scores and openSet
                 if (tentativeGScore < gScore[next])
                 {
                     previous[next] = current;
                     gScore[next] = tentativeGScore;
-                    fScore[next] = gScore[next] + calculateDistance(edge.to, endNode);
+                    fScore[next] = gScore[next] + calculateDistance(edge.to, endNode); // Update heuristic
                     openSet.emplace(fScore[next], next);
                 }
             }
         }
     }
 
+    // Path reconstruction
     vector<string> path;
     for (string current = end; current != start; current = previous[current])
     {
         if (previous.find(current) == previous.end())
         {
-            return {};
+            return {}; // No path found
         }
         path.push_back(current);
     }
@@ -187,7 +180,7 @@ vector<string> Algorithms::astar(const Graph &graph, const string &start, const 
 
     auto endTime = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
-    lastExecutionTime = duration.count() / 1000.0;
+    lastExecutionTime = duration.count() / 1000.0; // Record execution time
 
     return path;
 }
